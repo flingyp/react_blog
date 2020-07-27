@@ -1,0 +1,24 @@
+/* 页面公共部分的CSS */
+
+body {
+    background-color: #f1f2f6;
+}
+
+.common-main {
+    margin-top: .5rem;
+}
+
+.common-left {
+    background-color: #fff;
+    padding: .3rem;
+    border-radius: .3rem;
+    border-bottom: 1px solid #eee;
+}
+
+.common-right {
+    background-color: #fff;
+    margin-left: .5rem;
+    padding:.3rem;
+    border-radius: .3rem;
+    border-bottom:1px solid #eee;
+}
