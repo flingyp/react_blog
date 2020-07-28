@@ -489,3 +489,36 @@ Affix为 Ant Design 的固钉，到页面滑倒指定位置是 这一部分不�
   </div>
 </Affix>
 ```
+
+## 12-服务端server环境搭建
+
+服务器我们使用Node环境采用egg,js框架来实现。 [egg.js官网](https://eggjs.org/zh-cn/)
+
+> 安装 egg 脚手架
+
+`npm insatll egg-init -g`
+
+> 创建 server 文件夹 输入命令
+
+`egg-init --type=simple`
+
+> 安装依赖包、启动
+
+`npm install` 后 启动 `npm run dev`
+
+启动后，看到 hi egg 代表成功。
+
+## egg.js目录介绍
+
+在 egg.js 我们主要使用到的文件是 app文件夹。 其余参考官方。
+
++ app/router.js 用于配置 URL 路由规则
++ app/controller/** 用于解析用户的输入，处理后返回相应的结果
++ app/service/** 用于编写业务逻辑层，可选，建议使用
++ app/middleware/** 用于编写中间件，可选
++ app/public/** 用于放置静态资源，可选
++ app/extend/** 用于框架的扩展，可选
++ config/config.{env}.js 用于编写配置文件
++ config/plugin.js 用于配置需要加载的插件
++ test/** 用于单元测试
++ app.js 和 agent.js 用于自定义启动时的初始化工作，可选
