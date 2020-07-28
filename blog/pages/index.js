@@ -1,9 +1,12 @@
+import '../static/style/page/index.css'  // 首页样式
 import React, {useState} from 'react'
 import Head from 'next/head'
-import { Row, Col, Menu, List, Icon } from 'antd';
+import { Row, Col, List } from 'antd';
 import { FieldTimeOutlined, CalendarOutlined, FireOutlined } from '@ant-design/icons';
 import Header from '../components/Header'
-
+import Author from '../components/Author'
+import Advert from '../components/Advert'
+import Footer from '../components/Footer'
 
 
 const Home = () => {
@@ -20,7 +23,9 @@ const Home = () => {
       <Head>
         <title>Home</title>
       </Head>
-      <Header />
+      {/* 头部组件 */}
+      <Header /> 
+      {/* 中间部分 */}
       <Row className="common-main" type="flex" justify="center">
         <Col className="common-left" xs={24} sm={24} md={16} lg={18} xl={14}>
           <div>
@@ -42,10 +47,13 @@ const Home = () => {
             />
           </div>
         </Col>
-        <Col className="common-right" xs={0} sm={0} md={7} lg={5} xl={4}>
-          右侧
+        <Col className="common-box" xs={0} sm={0} md={7} lg={5} xl={4}>
+          <Author />
+          <Advert />
         </Col>
       </Row>
+      {/* 底部组件 */}
+      <Footer />
     </>
   )
 }

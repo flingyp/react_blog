@@ -31,7 +31,7 @@
 
 + `npm install --save @zeit/next-css`
 
-在 blog根目录下 新建一个 `next-config.js` 文件。是Next.js的总配置文件，加入下面的代码
+在 blog根目录下 新建一个 `next.config.js` 文件。是Next.js的总配置文件，加入下面的代码
 
 ```js
 const withCss = require('@zeit/next-css')
@@ -83,7 +83,7 @@ export default App
 
 + 创建 static/style/commponents/header.css 样式 
 
-在 _app.js 引入 组件样式 （这里在 Header.js组件中引入会报错误，没有找到解决办法）
+在 Header组件引入这个样式
 
 ## 04-首页 中间部分 左右两列布局
 
@@ -117,7 +117,7 @@ const Home = () => (
 export default Home
 ```
 
-## 编写 首页中间部分基本结构 
+## 05-编写 首页中间部分基本结构 
 
 + 博客文章的渲染采用 Ant Design 的List列表组件渲染。
 
@@ -158,4 +158,79 @@ const [ mylist , setMylist ] = useState(
 }
 ```
 
+## 06-编写右侧 Author 作者介绍组件
 
+Author作者介绍组件 主要使用了 Ant Design 的头像Avatar组件和图标组件
+
+引入样式 static/style/components/author.css 
+
+```js
+const Author = () => {
+    return (
+        <div className="author-div comm-box">
+            <div> 
+                <Avatar size={100} src="https://tse1-mm.cn.bing.net/th/id/OIP.uKcXMiwIIUy4xkgtEto6kAAAAA?w=312&h=176&c=7&o=5&pid=1.7"  />
+            </div>
+            <div className="author-introduction">
+                专注于WEB和移动前端开发。个人技术博客:yyblog.top/vuepress
+                <Divider>社交账号</Divider>
+                <Avatar size={30} icon={<GithubOutlined />} className="account"  />
+                <Avatar size={30} icon={<QqOutlined />}  className="account" />
+                <Avatar size={30} icon={<WechatOutlined />}  className="account"  />
+            </div>
+        </div>
+    )
+}
+```
+
+```css
+.author-div{
+    padding: 1rem;
+    text-align: center;
+}
+
+.author-div div {
+    margin: .5rem 0;
+}
+
+.author-introduction{
+    font-size: .8rem;
+    color: #999;
+}
+
+.account{
+    background-color: #999;
+    margin-left: .5rem;
+    margin-right: .5rem;
+    cursor: pointer;
+}
+```
+
+## 07-编写 Advert广告组件
+
+引入样式： static/style/components/advert.css
+
+```js
+const Advert = () => {
+    return (
+        <div className="ad-div common-box">
+            <div>
+                <img src="../static/imgs/test01.png" width="100%"></img>
+            </div>
+            <div>
+                <img src="../static/imgs/test02.png" width="100%"></img>
+            </div>
+            <div>
+                <img src="../static/imgs/test03.png" width="100%"></img>
+            </div>
+            <div>
+                <img src="../static/imgs/test04.png" width="100%"></img>
+            </div>
+        </div>
+    )
+}
+```
+
+## 08-编写 Footer底部组件
+
+引入样式： static/style/components/footer.css

@@ -1,3 +1,4 @@
+import '../static/style/components/header.css' // Header组件样式
 import { Row, Col, Menu } from 'antd'
 import { BankOutlined, YoutubeOutlined, SmileOutlined } from '@ant-design/icons'
 
