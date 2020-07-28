@@ -1,45 +1,30 @@
 // 博客详情页面
 import React, {useState} from 'react'
 import Head from 'next/head'
-import { Row, Col, Breadcrumb } from 'antd';
+import { Row, Col, Breadcrumb, Affix } from 'antd';
 import { FieldTimeOutlined, CalendarOutlined, FireOutlined } from '@ant-design/icons';
 import marked from 'marked'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/monokai-sublime.css';
+import axios from 'axios'
 import Header from '../components/Header'
 import Author from '../components/Author'
-import Advert from '../components/Advert'
 import Footer from '../components/Footer'
+import Tocify from '../components/tocify.tsx'
 import '../static/style/page/detailed.css'
 
 
-
-
-
-const blogList = () => {
-
-  let demo = ' ```<div className="bread-div"><div className="bread-div"><div className="bread-div"``` '
-
-  let markdown='# P01:课程介绍和环境搭建\n' +
-  '[ **M** ] arkdown + E [ ***ditor*** ] = **Mditor**  \n' +
-  '> Mditor 是一个简洁、易于集成、方便扩展、期望舒服的编写 markdown 的编辑器，仅此而已...\n\n' +
-  '**这是加粗的文字**\n\n' +
-  '*这是倾斜的文字*`\n\n' +
-  '>这是前言部分 \n\n' +
-  '***这是斜体加粗的文字***\n\n' +
-  '~~这是加删除线的文字~~ \n\n'+
-  '\`console.log(111)\` \n\n'+
-  '# p02:来个Hello World 初始Vue3.0\n' +
-  '## 04-首页 中间部分 左右两列布局\n'+
-  `${demo}` +
-  '# p07:Vue3.0基础知识讲解\n' +
-  '<iframe src="http://player.bilibili.com/player.html?aid=24931813&cid=42084760&page=1" scrolling="no" width="800px" height="600px" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe> \n\n'+
-  '> aaaaaaaaa\n' +
-  '>> bbbbbbbbb\n' +
-  '>>> cccccccccc\n\n'+
-  '``` var a=11; ```'
+const BlogList = (props) => {
+  const stringData = props.data.data[0].article_content 
 
   const renderer = new marked.Renderer()
+
+  const tocify = new Tocify()
+  renderer.heading = function(text, level, raw) {
+    const anchor = tocify.add(text, level)
+    return `<a id="${anchor}" href="#${anchor}" class="anchor-fix"><h${level}>${text}</h${level}></a>\n`;
+  }
+
 
   marked.setOptions({
     renderer: renderer,
@@ -54,7 +39,9 @@ const blogList = () => {
     }
   })
 
-  let html = marked(markdown)
+  let html = marked(stringData)
+
+  
 
 
   return (
@@ -98,7 +85,15 @@ const blogList = () => {
         </Col>
         <Col className="common-box" xs={0} sm={0} md={7} lg={5} xl={4}>
           <Author />
-          <Advert />
+          {/* 文章导航 */}
+          <Affix offsetTop={10}>
+            <div className="detailed-nav common-box">
+                <div className="nav-title">文章目录</div>
+                <div className="toc-list">
+                  {tocify && tocify.render()}
+                </div>
+            </div>
+          </Affix>
         </Col>
       </Row>
       {/* 底部组件 */}
@@ -107,4 +102,11 @@ const blogList = () => {
   )
 }
 
-export default blogList
+BlogList.getInitialProps = async () => {
+  const res = await axios('https://apiblog.jspang.com/default/getArticleById/51')
+  return {
+    data: res.data
+  }
+}
+
+export default BlogList
