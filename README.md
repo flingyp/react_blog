@@ -469,3 +469,23 @@ highlight: 高亮显示规则 ，这里我们将使用highlight.js来完成
 >
 </div>
 ```
+
+## 11-生成MarkDown右侧导航目录
+
+在 detailed.js 右侧添加文字导航目录。代码如下：
+
+Affix为 Ant Design 的固钉，到页面滑倒指定位置是 这一部分不会随着页面滚动而滚动。
+
+接下来要使用到一个 工具 `tocify.tsx`。 关于如何生成文字目录参考此 [文章](https://jspang.com/detailed?id=52#toc276)
+
+```js
+{/* 文章导航 */}
+<Affix offsetTop={15}>
+  <div className="detailed-nav common-box">
+      <div className="nav-title">文章目录</div>
+      <div className="toc-list">
+        {tocify && tocify.render()}
+      </div>
+  </div>
+</Affix>
+```
