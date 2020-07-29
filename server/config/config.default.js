@@ -12,6 +12,18 @@ module.exports = appInfo => {
    **/
   const config = exports = {};
 
+  config.mysql = {
+    client: {
+      host: 'localhost',
+      port: '3306',
+      user: 'root',
+      password: 'root',
+      database: 'myblog',
+    },
+    app: true,
+    agent: false
+  }
+
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1595942251954_2496';
 
@@ -28,3 +40,5 @@ module.exports = appInfo => {
     ...userConfig,
   };
 };
+
+

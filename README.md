@@ -508,7 +508,7 @@ Affix为 Ant Design 的固钉，到页面滑倒指定位置是 这一部分不�
 
 启动后，看到 hi egg 代表成功。
 
-## egg.js目录介绍
+## 13-egg.js目录介绍
 
 在 egg.js 我们主要使用到的文件是 app文件夹。 其余参考官方。
 
@@ -522,3 +522,57 @@ Affix为 Ant Design 的固钉，到页面滑倒指定位置是 这一部分不�
 + config/plugin.js 用于配置需要加载的插件
 + test/** 用于单元测试
 + app.js 和 agent.js 用于自定义启动时的初始化工作，可选
+
+## 14-服务端链接 mysql数据库
+
+> 安装 egg-mysql
+
+`npm i --save egg-mysql`
+
+> 配置
+
+```js
+// config/plugin.js
+exports.mysql = {
+  enable: true,
+  package: 'egg-mysql'
+}
+```
+
+```js
+// config/config.default.js
+// 注意 官网 写的是 module.mysql,但是 config.default.js 已经有个 module.exports = appInfo = {} 我们只需要写在里面就行 并且把 module 改成 config
+config.mysql = {
+  client: {
+    host: 'localhost',
+    port: '3306',
+    user: 'root',
+    password: 'root',
+    database: 'myblog'
+  },
+  app: true,
+  agent: false
+}
+```
+
+## 15-设计mysql数据库 type文字类型表 article 文字内容表
+
+> type表（文章类型表）
+
++ id : 类型编号 int类型
++ typeName: 文章类型名称 varchar类型
++ orderNum: 类型排序编号 int类型
+
+> article表（文章内容表）
+
++ id : 文章编号 int类型
++ type_id : 文章类型编号 int类型
++ title : 文章标题，varchar类型
++ article_cointent : 文章主体内容，text类型
++ introduce： 文章简介，text类型
++ addTime : 文章发布时间，int(11)类型
++ view_count ：浏览次数， int类型
+
+
+
+

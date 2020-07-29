@@ -3,9 +3,12 @@
 const Controller = require('egg').Controller;
 
 class HomeController extends Controller {
-  async index() {
+  async test() {
     const { ctx } = this;
-    ctx.body = 'hi, egg';
+    let result = await this.app.mysql.select("test")
+    ctx.body= {
+      data: result
+    }
   }
 }
 
