@@ -10,6 +10,8 @@ import Footer from '../components/Footer'
 import '../static/style/page/list.css'
 
 
+
+
 const blogList = () => {
   const [ mylist , setMylist ] = useState(
     [

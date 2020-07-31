@@ -570,9 +570,42 @@ config.mysql = {
 + title : 文章标题，varchar类型
 + article_cointent : 文章主体内容，text类型
 + introduce： 文章简介，text类型
-+ addTime : 文章发布时间，int(11)类型
++ addTime : 文章发布时间，text类型
 + view_count ：浏览次数， int类型
 
 
+## 16-写文字首页列表接口
+
+文章接口写在 server文件夹下的app/default/home.js 文件中
+
+article、type 表连用， 因为使用 egg.js语法不好实现 所以用 mysql语句。
+之后在 blog 的 index页面中调用该接口 实现数据的渲染。
+
+```js
+async getArticleList() {
+  const { ctx } = this;
+  let sql = 'SELECT article.id as id,'+
+  'article.title as title,'+
+  'article.introduce as introduce,'+
+  'article.addTime as addTime,'+
+  'article.view_count as view_count ,'+
+  '.type.typeName as typeName '+
+  'FROM article LEFT JOIN type ON article.type_id = type.Id'
+  const result = await this.app.mysql.query(sql)
+  ctx.body = {
+    data: result
+  }
+}
+```
+
+```js
+const baseUrl = 'http://127.0.0.1:7001'  
+Home.getInitialProps = async()  => {
+  const indexArticleData = await axios(`${baseUrl}/default/getArticleList`)
+  return {
+    data: indexArticleData.data
+  }
+}
+```
 
 
