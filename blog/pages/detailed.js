@@ -15,6 +15,7 @@ import '../static/style/page/detailed.css'
 
 
 const BlogList = (props) => {
+  console.log(props.data.data)
   const stringData = props.data.data[0].article_content 
 
   const renderer = new marked.Renderer()
@@ -101,9 +102,10 @@ const BlogList = (props) => {
     </>
   )
 }
-
-BlogList.getInitialProps = async () => {
-  const res = await axios('https://apiblog.jspang.com/default/getArticleById/51')
+const baseUrl = 'http://127.0.0.1:7001'  
+BlogList.getInitialProps = async ({query}) => {
+  let id = query.id
+  const res = await axios(`${baseUrl}/default/getArticleById/${id}`)
   return {
     data: res.data
   }

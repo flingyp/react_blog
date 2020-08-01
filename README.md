@@ -7,6 +7,36 @@
 原因： blog文件夹有子仓库
 解决方法：删除本地blog里的子仓库.git文件， 然后用 `git rm --cached repo(那个链接仓库的子文件夹的名字)`命令删除缓存后。重新上传到github上。 
 
+> **开发项目都会遇到的跨域问题**
+
+解决方法：使用 egg-cors 解决跨域问题
+
++ 安装 egg-cors
+
++ 在 后端server 中的config/plugin.js 文件 开启 egg-cors 写入如下代码:
+
+```js
+exports.cors: {
+    enable: true,
+    package: 'egg-cors'
+}
+```
+
++ 在 config/default.plugin.js文件 配置如下代码就完成了
+
+```js
+config.security = {
+　csrf: {
+　　enable: false
+　},
+　domainWhiteList: [ '*' ]
+};
+config.cors = {
+  origin: '*',
+  allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'
+};
+```
+
 ## 01-项目整体结构
 
 <img src="./imgs/个人博客项目整体结构.png" alt="项目整体结构" style="zoom:67%;" />
@@ -608,4 +638,51 @@ Home.getInitialProps = async()  => {
 }
 ```
 
+## 17-编写获取一章博客详情页的数据接口
+
+```js
+// 在 default/home.js 文件中. 记得配置路由  router/default.js
+async getArticleById() { // 获取文章接口 通过  acticle.id值
+  const {ctx} = this;
+  let id = this.ctx.params.id
+  let sql = 'SELECT article.id as id,'+
+      'article.title as title,'+
+      'article.introduce as introduce,'+
+      'article.article_content as article_content,'+
+      "FROM_UNIXTIME(article.addTime,'%Y-%m-%d %H:%i:%s' ) as addTime,"+
+      'article.view_count as view_count ,'+
+      'type.typeName as typeName ,'+
+      'type.id as typeId '+
+      'FROM article LEFT JOIN type ON article.type_id = type.Id '+
+      'WHERE article.id='+id
+
+  const result = await this.app.mysql.query(sql)
+  ctx.body = {
+    data: result
+  }
+}
+```
+
+紧接着前端的首页添加 Link 导航
+
+```js
+// pages/index.js
+<div className="list-title">
+  <Link prefetch href={{ pathname: '/detailed', query: {id: item.id}}}>
+    <a>{item.title}</a> 
+  </Link>
+</div>
+```
+
+在detail.js页面中 根据 首页传来的 id值 去请求对应的文章
+
+```js
+BlogList.getInitialProps = async ({query}) => {
+  let id = query.id
+  const res = await axios(`${baseUrl}/default/getArticleById/${id}`)
+  return {
+    data: res.data
+  }
+}
+```
 

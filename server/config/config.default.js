@@ -24,6 +24,18 @@ module.exports = appInfo => {
     agent: false
   }
 
+  config.security = {
+    csrf: {
+      enable: false
+    },
+    domainWhiteList: ['*']
+  }
+
+  config.cors = {
+    origin: '*',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'
+  }
+
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1595942251954_2496';
 

@@ -1,6 +1,7 @@
 // 博客首页页面
 import '../static/style/page/index.css'  // 首页样式
 import React, {useState} from 'react'
+import Link from 'next/link'
 import Head from 'next/head'
 import { Row, Col, List } from 'antd';
 import { FieldTimeOutlined, CalendarOutlined, FireOutlined } from '@ant-design/icons';
@@ -14,7 +15,6 @@ import Footer from '../components/Footer'
 const Home = (props) => {
   
   const [ mylist , setMylist ] = useState(props.data.data)
-  console.log(mylist)
   return (
     <>
       <Head>
@@ -32,7 +32,11 @@ const Home = (props) => {
               dataSource={mylist}
               renderItem={ item => (
                 <List.Item>
-                  <div className="list-title">{item.title}</div>
+                  <div className="list-title">
+                    <Link prefetch href={{ pathname: '/detailed', query: {id: item.id}}}>
+                      <a>{item.title}</a> 
+                    </Link>
+                  </div>
                   <div className="list-icon">
                     <span><FieldTimeOutlined />{item.addTime}</span>
                     <span><CalendarOutlined />{item.typeName}</span>
