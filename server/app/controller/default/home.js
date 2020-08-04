@@ -45,6 +45,14 @@ class HomeController extends Controller {
       data: result
     }
   }
+
+  async getTypeInfo() {  // 获取类别名称 和 类别编号
+    const {ctx} = this
+    const result = await this.app.mysql.select('type')
+    ctx.body = {
+      data: result
+    }
+  }
 }
 
 module.exports = HomeController;

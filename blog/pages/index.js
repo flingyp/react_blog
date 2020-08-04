@@ -11,6 +11,8 @@ import Author from '../components/Author'
 import Advert from '../components/Advert'
 import Footer from '../components/Footer'
 
+import servicePath from '../config/apiUrl' // 数据接口地址
+
 
 const Home = (props) => {
   
@@ -58,9 +60,9 @@ const Home = (props) => {
     </>
   )
 }
-const baseUrl = 'http://127.0.0.1:7001'  
+
 Home.getInitialProps = async()  => {
-  const indexArticleData = await axios(`${baseUrl}/default/getArticleList`)
+  const indexArticleData = await axios(servicePath.getArticleList)
   return {
     data: indexArticleData.data
   }

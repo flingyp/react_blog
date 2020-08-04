@@ -13,9 +13,10 @@ import Footer from '../components/Footer'
 import Tocify from '../components/tocify.tsx'
 import '../static/style/page/detailed.css'
 
+import servicePath from '../config/apiUrl' // 数据接口地址
+
 
 const BlogList = (props) => {
-  console.log(props.data.data)
   const stringData = props.data.data[0].article_content 
 
   const renderer = new marked.Renderer()
@@ -102,10 +103,9 @@ const BlogList = (props) => {
     </>
   )
 }
-const baseUrl = 'http://127.0.0.1:7001'  
 BlogList.getInitialProps = async ({query}) => {
   let id = query.id
-  const res = await axios(`${baseUrl}/default/getArticleById/${id}`)
+  const res = await axios(servicePath.getArticleById + '/' + id)
   return {
     data: res.data
   }

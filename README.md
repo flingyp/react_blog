@@ -686,3 +686,18 @@ BlogList.getInitialProps = async ({query}) => {
 }
 ```
 
+## 18-接口模块化统一管理
+
+在 blog 的根目录下 建一个 config 文件夹用来统一管理接口地址。 在config文件夹下新建一个 apiUrl.js文件。以后新增什么接口那么地址就往里放。
+
+```js
+let ipUrl = 'http://127.0.0.1:7001/default/'
+
+let servicePath = {
+    getArticleList: ipUrl + 'getArticleList',   // 首页文章列表接口
+    getArticleById: ipUrl + 'getArticleById',    // 文章详情页内容接口， 接收文章id(acticle.id)值
+}
+
+export default servicePath
+```
+
