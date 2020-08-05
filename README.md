@@ -701,3 +701,52 @@ let servicePath = {
 export default servicePath
 ```
 
+## 19-编写 list 页面的栏目的内容
+
+首先先理清楚 我们首页页面展示出来的是所有的文章，而list页面展示出来的只有部分文章，就是属于list栏目的文章才会被展示出来。这就要根据文章的 type_id 来决定了。
+
+**写根据type_id来查询所属文章**
+
+注意：这里的 id 我们需要前端来给
+
+```js
+async getListById() { //根据类别ID获得文章列表
+  const {ctx} = this
+  let id = this.ctx.params.id
+  let sql = 'SELECT article.id as id,'+
+  'article.title as title,'+
+  'article.introduce as introduce,'+
+  "FROM_UNIXTIME(article.addTime,'%Y-%m-%d %H:%i:%s' ) as addTime,"+
+  'article.view_count as view_count ,'+
+  'type.typeName as typeName '+
+  'FROM article LEFT JOIN type ON article.type_id = type.Id '+
+  'WHERE type_id='+id
+
+  const result = await this.app.mysql.query(sql)
+
+  ctx.body = {
+    data: result
+  }
+}
+```
+
+编写前端list页面， 我们通过 getInitialProps 方法获取数据, 通过useEffect 随时更新数据
+
+id 值在 index 跳转时转入 固定值 为 1， 对应的就是 数据库中的 type_id = 1 的文章
+
+```js
+blogList.getInitialProps = async({query})  => {
+  let id = query.id
+  const listArticleData = await axios(servicePath.getListById + '/' + id)
+  return {
+    data: listArticleData.data
+  }
+}
+```
+
+```js
+useEffect(()=> {
+  setMylist(props.data.data)
+}, [])
+```
+

@@ -53,6 +53,25 @@ class HomeController extends Controller {
       data: result
     }
   }
+
+  async getListById() { //根据类别ID获得文章列表
+    const {ctx} = this
+    let id = this.ctx.params.id
+    let sql = 'SELECT article.id as id,'+
+    'article.title as title,'+
+    'article.introduce as introduce,'+
+    "FROM_UNIXTIME(article.addTime,'%Y-%m-%d %H:%i:%s' ) as addTime,"+
+    'article.view_count as view_count ,'+
+    'type.typeName as typeName '+
+    'FROM article LEFT JOIN type ON article.type_id = type.Id '+
+    'WHERE type_id='+id
+
+    const result = await this.app.mysql.query(sql)
+
+    ctx.body = {
+      data: result
+    }
+  }
 }
 
 module.exports = HomeController;
