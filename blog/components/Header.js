@@ -27,7 +27,7 @@ const Header = () => {
     // 跳转到列表页
     const handleClick = (e) => {
         if(e.key == 1) { // 跳转到列表页
-            Router.push('/list/?id=1')
+            Router.push('/list?id=1')
         } else if(e.key === 'home') { // 跳转到首页
             Router.push('/index')
         }

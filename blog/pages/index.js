@@ -11,11 +11,32 @@ import Author from '../components/Author'
 import Advert from '../components/Advert'
 import Footer from '../components/Footer'
 
+import marked from 'marked'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/monokai-sublime.css'
+
 import servicePath from '../config/apiUrl' // 数据接口地址
 
 
 const Home = (props) => {
-  
+  const renderer = new marked.Renderer()
+  marked.setOptions({
+    renderer: renderer,
+    gfm: true,
+    pedantic: false,
+    sanitize: false,
+    tables: true,
+    breaks: false,
+    smartLists: true,
+    smartypants: false,
+    sanitize:false,
+    xhtml: false,
+    highlight: function (code) {
+      return hljs.highlightAuto(code).value;
+    }
+  }); 
+
+
   const [ mylist , setMylist ] = useState(props.data.data)
   return (
     <>
@@ -44,7 +65,9 @@ const Home = (props) => {
                     <span><CalendarOutlined />{item.typeName}</span>
                     <span><FireOutlined />{item.view_count}人</span>
                   </div>
-                  <div className="list-context">{item.introduce}</div> 
+                  <div className="list-context"
+                    dangerouslySetInnerHTML={{__html: marked(item.introduce)}}
+                  ></div> 
                 </List.Item>
               )}
             />

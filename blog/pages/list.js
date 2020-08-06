@@ -10,14 +10,31 @@ import Author from '../components/Author'
 import Advert from '../components/Advert'
 import Footer from '../components/Footer'
 import '../static/style/page/list.css'
-
 import servicePath from '../config/apiUrl'
-
+import marked from 'marked'
+import hljs from "highlight.js";
+import 'highlight.js/styles/monokai-sublime.css';
 
 
 
 const blogList = (props) => {
-  const [ mylist , setMylist ] = useState([props.data.data])
+  const renderer = new marked.Renderer();
+  marked.setOptions({
+    renderer: renderer,
+    gfm: true,
+    pedantic: false,
+    sanitize: false,
+    tables: true,
+    breaks: false,
+    smartLists: true,
+    smartypants: false,
+    sanitize:false,
+    xhtml: false,
+    highlight: function (code) {
+      return hljs.highlightAuto(code).value;
+    }
+  }); 
+  const [ mylist , setMylist ] = useState(props.data.data)
   useEffect(()=> {
     setMylist(props.data.data)
   }, [])
@@ -52,11 +69,13 @@ const blogList = (props) => {
                     </Link>
                   </div>
                   <div className="list-icon">
-                    <span><FieldTimeOutlined />2019-06-28</span>
-                    <span><CalendarOutlined />视频教程</span>
-                    <span><FireOutlined />5498人</span>
+                    <span><FieldTimeOutlined />{item.addTime}</span>
+                    <span><CalendarOutlined />{item.typeName}</span>
+                    <span><FireOutlined />{item.view_count}人</span>
                   </div>
-                  <div className="list-context">{item.introduce}</div> 
+                  <div className="list-context"
+                    dangerouslySetInnerHTML={{__html:marked(item.introduce)}}
+                  ></div> 
                 </List.Item>
               )}
             />

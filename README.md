@@ -750,3 +750,78 @@ useEffect(()=> {
 }, [])
 ```
 
+## 20-首页、列表页面支持Markdown语法
+
+首页、列表页面中的 简介也支持Markdown语法
+
+```js
+import marked from 'marked'
+import hljs from "highlight.js";
+import 'highlight.js/styles/monokai-sublime.css';
+```
+
+```js
+const renderer = new marked.Renderer();
+marked.setOptions({
+  renderer: renderer,
+  gfm: true,
+  pedantic: false,
+  sanitize: false,
+  tables: true,
+  breaks: false,
+  smartLists: true,
+  smartypants: false,
+  sanitize:false,
+  xhtml: false,
+  highlight: function (code) {
+          return hljs.highlightAuto(code).value;
+  }
+}); 
+```
+
+```js
+<div className="list-context"
+      dangerouslySetInnerHTML={{__html:marked(item.introduce)}}
+>
+```
+
+然后在 index.js 增加相应的 markdown 代码解析样式
+
+```css
+pre{
+  display: block;
+  background-color: #283646 !important;
+  padding: .5rem !important;
+  overflow-y: auto;
+  font-weight: 300;
+  font-family: Menlo, monospace;
+  border-radius: .3rem;
+}
+
+pre >code{
+  border:0px !important;
+  background-color: #283646 !important;
+  color:#FFF;
+
+}
+code {
+  display: inline-block ;
+  background-color:#f3f3f3;
+  border:1px solid #fdb9cc;
+  border-radius:3px;
+  font-size: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color:#4f4f4f;
+  margin: 0px 3px;
+}
+
+.list-context img{
+  width:100% ;
+  border-radius:5px;
+  border:1px solid #f0f0f0;
+  max-width:1000px !important;
+  display: block;
+  margin:8px  auto ;
+}
+```
