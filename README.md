@@ -825,3 +825,123 @@ code {
   margin:8px  auto ;
 }
 ```
+
+## 21-后台管理系统项目初始化
+
+后台管理系统主要通过 React Hooks + Ant Design 来开发做成单页面应用程序。因为后台管理系统不需要被SEO。
+
+项目搭建：
+
++ `create-react-app blogsystem`
+
++ 修改项目启动默认端口号（因为blog的启动端口是3000）改为 3001
+  + `"start": "set PORT=3001 && react-scripts start",`
+
++ 安装 Ant Design `npm install antd --save`
+
++ 删除项目中不需要的文件
+
++ 测试Ant Design是否可用
+
+## 22-后台管理系统路由配置引入Login登录页面
+
++ 引入 react-router-dom  `npm install react-router-dom --save`
+
++ 在src目录创建 Pages文件夹 里面创建 Main.js 和 Login.js文件
+  + Main.js主要用于路由配置
+
+```js
+import React from 'react'
+import {BrowserRouter as Router, Route}      from 'react-router-dom'
+import Login from './Login'
+
+function Main() {
+    return (
+        <Router>
+            <Route path="/login" exact component={Login}></Route>
+        </Router>
+    )
+}
+
+export default Main
+```
+
+```js
+import React from 'react'
+
+function Login() {
+    return (
+        <div>我是登录页面</div>
+    )
+}
+
+export default Login
+```
+
+下一步就是去编写Login页面的UI了
+
+## 23-编写Login页面UI
+
+这里主要用到的组件是 Card、 Input、 Button、 Spin和图标组件具体如何使用直接到Ant Design查文档。
+
+下面给出整体代码:
+
+```js
+import React , {useState} from 'react'
+import { Card, Input, Button, Spin} from 'antd';
+import { UserOutlined ,LockOutlined,SearchOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import '../static/css/Login.css'
+
+function Login() {
+    const [userName, setUserName] = useState('')
+    const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState(false)
+
+    const checkLogin = () => { // 点击登录时执行的方法
+        setLoading(true)
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
+    }
+
+    return (
+        <div className="login-div">
+            <Spin tip="登录中..." spinning={loading}>
+                <Card title="博客管理系统"  hoverable={true} bordered={true} style={{ width: 450 }} >
+                    <Input 
+                        id="userName"
+                        size="large" 
+                        placeholder="请输入账号:" 
+                        prefix={<UserOutlined />}
+                        onChange={ (e) => {setUserName(e.target.value)}} 
+                    />
+                    <br />
+                    <br />
+                    <Input.Password
+                        id="password"
+                        placeholder="请输入密码:"
+                        size="large" 
+                        prefix={<LockOutlined /> }
+                        iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                        onChange={ (e) => {setPassword(e.target.value)}} 
+                    />
+                    <br/>
+                    <br/>
+                    <Button 
+                        type="primary" 
+                        size="large" 
+                        block 
+                        icon={<SearchOutlined />} 
+                        onClick={checkLogin}>
+                            登录
+                    </Button>
+                </Card>
+            </Spin>
+        </div>
+    )
+}
+export default Login
+```
+
+
+
