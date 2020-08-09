@@ -1,5 +1,5 @@
 import React , {useState} from 'react'
-import { Card, Input, Button, Spin} from 'antd';
+import { Card, Input, Button, Spin, notification } from 'antd';
 import { UserOutlined ,LockOutlined,SearchOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import '../static/css/Login.css'
 
@@ -11,6 +11,15 @@ function Login() {
     const checkLogin = () => { // 点击登录时执行的方法
         setLoading(true)
         setTimeout(() => {
+            if(userName=='' || password =='') {
+                notification.warn({
+                    message: '友情提示',
+                    description:
+                        '用户名或密码不能为空!!!',
+                    duration: 2,
+                    placement: 'topLeft'
+                });
+            }
             setLoading(false)
         }, 1000)
     }
