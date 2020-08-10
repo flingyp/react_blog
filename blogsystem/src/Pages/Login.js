@@ -1,16 +1,18 @@
 import React , {useState} from 'react'
-import { Card, Input, Button, Spin, notification } from 'antd';
+import { Card, Input, Button, Spin, notification,message } from 'antd';
 import { UserOutlined ,LockOutlined,SearchOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import '../static/css/Login.css'
+import axios from 'axios'
+import servicePath from '../config/apiUrl'
 
-function Login() {
+function Login(props) {
     const [userName, setUserName] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
 
-    const checkLogin = () => { // 点击登录时执行的方法
+    const checkLogin = async () => { // 点击登录时执行的方法
         setLoading(true)
-        setTimeout(() => {
+        setTimeout(async () => {
             if(userName=='' || password =='') {
                 notification.warn({
                     message: '友情提示',
@@ -19,6 +21,16 @@ function Login() {
                     duration: 2,
                     placement: 'topLeft'
                 });
+            }
+            const result = await axios.post(servicePath.login, {
+                username: userName,
+                password: password
+            })
+            if(result.data.message === '登录成功') {
+                localStorage.setItem('openId', result.data.session)
+                props.history.push('/index')
+            } else {
+                message.error('用户名或密码错误');
             }
             setLoading(false)
         }, 1000)

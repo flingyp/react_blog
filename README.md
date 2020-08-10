@@ -1085,4 +1085,62 @@ const changeIntroduce = (e) => {
 }
 ```
 
+## 27-登录接口的编写
+
+因为后台管理系统只有自己一个人会去使用，所以也就没有考虑密码加密、用户权限的东西了。直接在数据库中去建立了一个用户表添加了一个用户。所以也没有注册的功能。
+
+```js
+async login() {
+  const {ctx} = this;
+  let { username, password } = ctx.request.body;
+  const result = await this.app.mysql.get('blogsystem_user', {username: username, password: password})
+  if(result !== null) {
+      // 用户验证成功，进行 session缓存
+      let openId = new Date().getTime()
+      ctx.session.openId = openId
+      ctx.body = {
+          message: '登录成功',
+          session: openId
+      }
+  }else {
+      ctx.body = {
+          message: '登录失败'
+      }
+  }
+}
+```
+## 28-后台编写登录流程
+
+大致代码如下:
+
+```js
+const checkLogin = async () => { // 点击登录时执行的方法
+  setLoading(true)
+  setTimeout(async () => {
+      if(userName=='' || password =='') {
+          notification.warn({
+              message: '友情提示',
+              description:
+                  '用户名或密码不能为空!!!',
+              duration: 2,
+              placement: 'topLeft'
+          });
+      }
+      const result = await axios.post(servicePath.login, {
+          username: userName,
+          password: password
+      })
+      if(result.data.message === '登录成功') {
+          localStorage.setItem('openId', result.data.session)
+          props.history.push('/index')
+      } else {
+          message.error('用户名或密码错误');
+      }
+      setLoading(false)
+  }, 1000)
+}
+```
+
+
+
 
