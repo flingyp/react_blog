@@ -1025,4 +1025,64 @@ export default AdminIndex
 </div>
 ```
 
+## 26-实现Markdown实现预览
+
+因为要实现Markdown实现预览所以就需要到 Marked 来解析Markdown语法。 下面写了些要用到的变量
+
+```js
+  const [articleId,setArticleId] = useState(0)  // 文章的ID，如果是0说明是新增加，如果不是0，说明是修改
+  const [articleTitle,setArticleTitle] = useState('')   //文章标题
+  const [articleContent , setArticleContent] = useState('')  //markdown的编辑内容
+  const [markdownContent, setMarkdownContent] = useState('预览内容') //html内容
+  const [introducemd,setIntroducemd] = useState()            //简介的markdown内容
+  const [introducehtml,setIntroducehtml] = useState('等待编辑') //简介的html内容
+  const [showDate,setShowDate] = useState()   //发布日期
+  const [updateDate,setUpdateDate] = useState() //修改日志的日期
+  const [typeInfo ,setTypeInfo] = useState([]) // 文章类别信息
+  const [selectedType,setSelectType] = useState(1) //选择的文章类别
+```
+
+通过给其绑定对应的事件即可
+
+```js
+<TextArea
+    className="markdown-content"
+    rows={35}
+    placeholder="文章内容"
+    value={articleContent} 
+    onChange={changeContent}
+    onPressEnter={changeContent}
+/>
+
+<div 
+  className="show-html"
+  dangerouslySetInnerHTML={{__html: markdownContent}}
+></div>
+
+const changeContent = (e) => {
+        setArticleContent(e.target.value)
+        let html = marked(e.target.value)
+        setMarkdownContent(html)
+}
+
+<TextArea 
+  rows={4}
+  placeholder="文章简介"
+  value={introducemd}  
+  onChange={changeIntroduce} 
+  onPressEnter={changeIntroduce}
+/>
+<div 
+  className="introduce-html"
+  dangerouslySetInnerHTML={{__html:introducehtml}}
+></div>
+
+
+const changeIntroduce = (e) => {
+  setIntroducemd(e.target.value)
+  let html = marked(e.target.value)
+  setIntroducehtml(html)
+}
+```
+
 

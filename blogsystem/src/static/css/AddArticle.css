@@ -28,13 +28,13 @@
 
 .show-html pre{
     display: block;
-    background-color: #f0f0f0;
+    background-color: #34495e;
     padding: 5px;
     border-radius: 5px;
 }
 .show-html pre>code{
-    color: #000;
-    background-color: #f0f0f0;
+    color: #ecf0f1;
+    background-color: #34495e;
 }
 .show-html code {
     background-color: #fff5f5;
@@ -45,7 +45,7 @@
 }
 .show-html blockquote{
     border-left:4px solid #cbcbcb ;
-    padding: 10px 10px 10px 30px; 
+    padding: 5px 5px 0px 20px; 
     background-color: #f8f8f8;
 }
 .introduce-html{
