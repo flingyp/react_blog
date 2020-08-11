@@ -57,7 +57,7 @@ function AddArticle(props) {
             header:{ 'Access-Control-Allow-Origin':'*' },
             withCredentials: true
         })
-        if(result.data.data === '没有登录') {
+        if(result.data.data === '没有登录' || result.data.data === '请重新登录') {
             props.history.push('/login')
         } else {
             setTypeInfo(result.data.data)

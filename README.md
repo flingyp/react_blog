@@ -1232,4 +1232,96 @@ const checkLogin = async () => { // 点击登录时执行的方法
 }
 ```
 
+## 30-添加token认证版本，解决上面路由守卫没有写好的一部分坑
+
+因为写的路由守卫中间件中登录返回的是 一个普通的 字符串 session，所以没有用户登录模块就有许多漏洞。所以准备增加 token认证来加强路由守卫功能。
+
+**先声明下token的使用流程：**
+
+1. 每一个用户在登录时都会生成一个 token 并且返回给前端
+
+2. 当用户访问其他敏感接口时需要携带这个 token 来验证你的身份，如果 token 被修改或者没有 token则会被强制返回到登陆页面
+
+目前代码涉及到如下：
+
+登录接口： 用户在输入用户名和密码正确的情况下会返回 token 
+
+```js
+async login() { // 登录接口
+  const {ctx} = this;
+  let { username, password } = ctx.request.body;
+  const result = await this.app.mysql.get('blogsystem_user', {username: username, password: password})
+  if(result !== null) {
+      // 用户验证成功，进行 session缓存
+      // let openId = new Date().getTime()
+      // 生成token
+      const token = jwt.sign(
+          {username: result.username, id: result.Id},
+          'secret',
+          {expiresIn: '1h'}
+      )
+      ctx.session.openId = token
+      ctx.body = {
+          message: '登录成功',
+          openId: token
+      }
+  }else {
+      ctx.body = {
+          message: '登录失败'
+      }
+  }
+}
+```
+
+文章类别信息接口: 在调用文章类别信息等敏感接口时，会先通过路由守卫 adminauth
+
+```js
+const jwt = require('jsonwebtoken')
+module.exports = options => {
+  return async function adminauth(ctx, next) {
+      let str = ctx.request.header.cookie 
+      let openIdName = str.indexOf('openId') 
+      if(openIdName!= '-1') {
+          let openId = str.split(';')[2].split('=')[1]  // 获取 token 值
+          try {
+            let decoded = jwt.verify(openId, 'secret'); // 进行token 验证，如果 token被修改就会报错 进入 catch {} 
+            if(decoded.username === 'yyblog') {
+                await next()
+            } else {
+                ctx.body = {
+                    data: '没有登录'
+                }
+            }
+          } catch (error) {
+            ctx.body = {
+                data: '请重新登录'
+            }
+          }
+      }else {
+          ctx.body = {
+            data: '没有登录'
+          }
+      }
+  }
+}
+```
+
+前端调用文章类别信息接口时： 
+
+```js
+const getTypeInfo = async () => {
+  const result = await axios({
+      method:'get',
+      url: servicePath.getTypeInfo,
+      header:{ 'Access-Control-Allow-Origin':'*' },
+      withCredentials: true
+  })
+  if(result.data.data === '没有登录' || result.data.data === '请重新登录') {
+      props.history.push('/login')
+  } else {
+      setTypeInfo(result.data.data)
+  }
+}
+```
+
 
