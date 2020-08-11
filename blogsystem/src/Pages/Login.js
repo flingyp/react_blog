@@ -21,13 +21,15 @@ function Login(props) {
                     duration: 2,
                     placement: 'topLeft'
                 });
+                setLoading(false)
+                return
             }
             const result = await axios.post(servicePath.login, {
                 username: userName,
                 password: password
             })
             if(result.data.message === '登录成功') {
-                localStorage.setItem('openId', result.data.session)
+                document.cookie = `openId=${result.data.openId}`
                 props.history.push('/index')
             } else {
                 message.error('用户名或密码错误');

@@ -1141,6 +1141,95 @@ const checkLogin = async () => { // 点击登录时执行的方法
 }
 ```
 
+## 29-路由守卫和获取分类信息
 
+首先先说明一个问题：在egg.js中我在 login接口中设置的 session 然后在 getTypeInfo接口 和中间件中去获取 ctx.session.openId的值时是 underfind。这就导致我不能在服务端获取 session。所以就想了一个粗略的办法。只要后台管理系统的cookie中存在openId这一个字段我就让它过。虽然这样做还是有很大很大很大的漏洞但是我现在只能这么做了，因为我也没有去设置什么数据库的密码加密和用户认证的相关的东西。所以用户登录这块我是没有做好的。。。
+
+```js
+// middleware/adminauth.js 路由守卫
+module.exports = options => {
+    return async function adminauth(ctx, next) {
+        let str = ctx.request.header.cookie
+        let openIdName = str.indexOf('openId')
+        if(openIdName!= '-1') {
+            let openId = str.split(';')[2].split('=')[1]
+            if(openId) {
+                await next()
+            } else {
+                ctx.body = {
+                    data: '没有登录'
+                }
+            }
+        }else {
+            ctx.body = {
+                data: '没有登录'
+            }
+        }
+        // if(ctx.session.openId) {
+        //     await next()
+        // } else {
+        //     ctx.body = {
+        //         data: '没有登录'
+        //     }
+        // }
+    }
+}
+```
+
+```js
+async getTypeInfo() {  // 获取分类信息接口
+  const {ctx} = this
+  const resType = await this.app.mysql.select('type')
+  ctx.body = {
+      data: resType
+  }
+}
+```
+
+```js
+const getTypeInfo = async () => {
+  const result = await axios({
+    method:'get',
+    url: servicePath.getTypeInfo,
+    header:{ 'Access-Control-Allow-Origin':'*' },
+    withCredentials: true
+  })
+  if(result.data.data === '没有登录') {
+    props.history.push('/login')
+} else {
+    setTypeInfo(result.data.data)
+  }
+}
+```
+
+```js
+const checkLogin = async () => { // 点击登录时执行的方法
+  setLoading(true)
+  setTimeout(async () => {
+      if(userName=='' || password =='') {
+          notification.warn({
+              message: '友情提示',
+              description:
+                  '用户名或密码不能为空!!!',
+              duration: 2,
+              placement: 'topLeft'
+          });
+          setLoading(false)
+          return
+      }
+      const result = await axios.post(servicePath.login, {
+          username: userName,
+          password: password
+      })
+      if(result.data.message === '登录成功') {
+          document.cookie = `openId=${result.data.openId}`
+          props.history.push('/index')
+      } else {
+          message.error('用户名或密码错误');
+      }
+      setLoading(false)
+  }, 1000)
+}
+```
 
 

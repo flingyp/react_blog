@@ -32,10 +32,22 @@ module.exports = appInfo => {
   }
 
   config.cors = {
-    origin: '*',
-    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'
+    origin: 'http://localhost:3000',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
   }
 
+  config.cors = {
+    origin: 'http://127.0.0.1:3001',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
+    credentials: true // 允许cookie跨域
+  }
+
+  exports.session = {
+    key: 'EGG_SESS',
+    maxAge: 24 * 3600 * 1000, // 1 天
+    httpOnly: true,
+    encrypt: true,
+  };
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1595942251954_2496';
 

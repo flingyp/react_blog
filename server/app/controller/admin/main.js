@@ -8,7 +8,7 @@ class MainController extends Controller {
         ctx.body="test egg.js"
     }
 
-    async login() {
+    async login() { // 登录接口
         const {ctx} = this;
         let { username, password } = ctx.request.body;
         const result = await this.app.mysql.get('blogsystem_user', {username: username, password: password})
@@ -18,12 +18,20 @@ class MainController extends Controller {
             ctx.session.openId = openId
             ctx.body = {
                 message: '登录成功',
-                session: openId
+                openId: openId
             }
         }else {
             ctx.body = {
                 message: '登录失败'
             }
+        }
+    }
+
+    async getTypeInfo() {  // 获取分类信息接口
+        const {ctx} = this
+        const resType = await this.app.mysql.select('type')
+        ctx.body = {
+            data: resType
         }
     }
 }
