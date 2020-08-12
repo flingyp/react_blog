@@ -1324,4 +1324,101 @@ const getTypeInfo = async () => {
 }
 ```
 
+## 31-添加文章
+
+添加文章再点击发布文章按钮后往数据库存入一篇文章。 
+
+后台管理系统部分：  
+  1. 文章写好后存入 propsData 对象中保存准备作为参数发给后端
+  2. 发给给端前先进行判断 如果 articleId === 0 代表这篇文章是新文章， 如果不等于0代表就是发布后的一篇新文章想要修改再次发布。
+  3. 再次发布就执行 else {} 部分的代码块 更新数据库的这篇文章即可
+
+后端Server部分： 
+  1. 新发布的文章调用 addArticle 接口
+  2. 修改后更新文章调用 updateArticle 接口
+
+
+```js
+const saveArticle = async () => {   // 发布文章
+if(!articleTitle) {
+    message.error('请输入博客标题')
+    return false
+} else if(!selectedType) {
+    message.error('必须选择文章类别')
+    return false 
+} else if(!articleContent) {
+    message.error('文章内容不能为空')
+    return false
+} else if(!introducemd) {
+    message.error('文件简介不能为空')
+    return false 
+} else if(!showDate) {
+    message.error('发布日期不能为空')
+    return false 
+}
+let propsData = {}  // 添加文章需要传入的参数
+propsData.type_id = selectedType // 文章类型 代号 1 /2 /3
+propsData.title = articleTitle    // 文章标题
+propsData.article_content = articleContent // 文章内容
+propsData.introduce = introducemd  // 文章简介
+propsData.addTime = showDate   // 文章发布日期
+
+if(articleId === 0) {  // 新增的文章  articleId 等于 0 代表的是新添加的文章
+  propsData.view_count = 0
+  const result = await axios({
+    method: 'post',
+    url: servicePath.addArticle,
+    data: propsData,
+    withCredentials: true
+  })
+  // 添加文字成功后，把数据库该文章的 ID 返回回来，赋给 articleId，下次修改了这篇文章再发布就是不是添加一篇新文章了
+  const newArrticleId = result.data.arrticleId
+  setArticleId(newArrticleId) 
+  if(result.data.isSuccess) {
+    message.success('文章保存成功')
+  } else {
+    message.error('文章保存失败')
+  }
+} else {
+  // 新添加文章后如果我们再改动，再点击保存按钮就会又新增加一条记录，这并不是我们想要的，这时候应该是修改，而不是从新增加一条新的数据
+    propsData.id = articleId
+    const result = await axios({
+      method: 'post',
+      url: servicePath.updateArticle,
+      data: propsData,
+      header:{ 'Access-Control-Allow-Origin':'*' },
+      withCredentials: true
+    })
+    if(result.data.isSuccess) {
+      message.success('文章保存成功')
+    } else {
+      message.error('文章保存失败')
+    }
+  }
+}
+```
+
+```js
+async addArticle() { // 添加文章接口
+  const {ctx, app} = this
+  let addArticleProps = ctx.request.body
+  const result = await app.mysql.insert('article', addArticleProps)
+  const insertSuccess = result.affectedRows === 1  // 如果affectedRows 等于1就代表插入成功  返回 true
+  const insertId = result.insertId   // 新文章添加成功 返回改文章的 ID值 对应数据库中的 ID
+  ctx.body = {
+      isSuccess : insertSuccess,
+      arrticleId: insertId
+  }
+}
+
+async updateArticle() { // 更新文章接口
+  const {ctx, app} = this
+  let addArticleProps = ctx.request.body
+  const result = await app.mysql.update('article', addArticleProps)
+  const updateSuccess = result.affectedRows === 1  // 如果affectedRows 等于1就代表更新成功  返回 true
+  ctx.body = {
+      isSuccess: updateSuccess
+  }
+}
+```
 

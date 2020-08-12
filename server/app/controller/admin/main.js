@@ -42,6 +42,28 @@ class MainController extends Controller {
             data: resType
         }
     }
+
+    async addArticle() { // 添加文章接口
+        const {ctx, app} = this
+        let addArticleProps = ctx.request.body
+        const result = await app.mysql.insert('article', addArticleProps)
+        const insertSuccess = result.affectedRows === 1  // 如果affectedRows 等于1就代表插入成功  返回 true
+        const insertId = result.insertId   // 新文章添加成功 返回改文章的 ID值 对应数据库中的 ID
+        ctx.body = {
+            isSuccess : insertSuccess,
+            arrticleId: insertId
+        }
+    }
+
+    async updateArticle() { // 更新文章接口
+        const {ctx, app} = this
+        let addArticleProps = ctx.request.body
+        const result = await app.mysql.update('article', addArticleProps)
+        const updateSuccess = result.affectedRows === 1  // 如果affectedRows 等于1就代表更新成功  返回 true
+        ctx.body = {
+            isSuccess: updateSuccess
+        }
+    }
 }
 
 
