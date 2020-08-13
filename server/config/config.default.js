@@ -28,16 +28,12 @@ module.exports = appInfo => {
     csrf: {
       enable: false
     },
-    domainWhiteList: ['*']
+    domainWhiteList: ['http://127.0.0.1:3000', 'http://127.0.0.1:3001']
   }
 
   config.cors = {
-    origin: 'http://localhost:3000',
-    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
-  }
-
-  config.cors = {
-    origin: 'http://127.0.0.1:3001',
+    // 忽略 origin 字段， 可以在 domainWhiteList 配置多个跨域网址
+    // origin: 'http://127.0.0.1:3001', 
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
     credentials: true // 允许cookie跨域
   }

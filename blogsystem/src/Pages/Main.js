@@ -8,7 +8,7 @@ function Main() {
         <div className="main">
             <Router>
                 <Route path="/login" exact component={Login}></Route>
-                <Route path="/index" exact component={AdminIndex}></Route>
+                <Route path="/index" component={AdminIndex}></Route>
             </Router>
         </div>
     )

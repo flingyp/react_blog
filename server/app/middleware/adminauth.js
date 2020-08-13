@@ -8,9 +8,10 @@ module.exports = options => {
             try {
                 let decoded = jwt.verify(openId, 'secret');
                 if(decoded.username === 'yyblog') {
+                    console.log(decoded.username)
                     await next()
                 } else {
-                    ctx.body = {
+                    ctx.body = { // 这里代表 token 过期
                         data: '没有登录'
                     }
                 }

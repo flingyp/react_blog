@@ -85,7 +85,12 @@ const Home = (props) => {
 }
 
 Home.getInitialProps = async()  => {
-  const indexArticleData = await axios(servicePath.getArticleList)
+  const indexArticleData = await axios({
+    method: 'get',
+    url: servicePath.getArticleList, 
+    header:{ 'Access-Control-Allow-Origin':'*' },
+    withCredentials: true
+  })
   return {
     data: indexArticleData.data
   }

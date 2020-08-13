@@ -37,6 +37,30 @@ config.cors = {
 };
 ```
 
+> **egg-cors 跨域中的坑**
+
+在配置跨域的网址时，只能配置 一个 config.cors, 如果配置了多个则后面的会覆盖前面的 config.cors。
+
+因为blog、blogsystem都需要配置跨域 但是 给 origin属性设置 为 '*' 也会出现问题必须配置具体的跨域地址。
+
+具体方法： 将 config.cors 的 orgin字段忽略 在 config.security 的 domainWhiteList 去配置
+
+```js
+config.security = {
+  csrf: {
+    enable: false
+  },
+    domainWhiteList: ['http://127.0.0.1:3000', 'http://127.0.0.1:3001']
+  }
+
+  config.cors = {
+  // 忽略 origin 字段， 可以在 domainWhiteList 配置多个跨域网址
+  // origin: 'http://127.0.0.1:3001', 
+  allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
+  credentials: true // 允许cookie跨域
+}
+```
+
 ## 01-项目整体结构
 
 <img src="./imgs/个人博客项目整体结构.png" alt="项目整体结构" style="zoom:67%;" />
@@ -1422,3 +1446,265 @@ async updateArticle() { // 更新文章接口
 }
 ```
 
+## 32-文章列表页面
+
+文章列表页面是 ArticleList.js 文件，下面具体记录下接口的的写法和数据获取的方法吧
+
+```js
+async getArticleList() { // 获取文章列表接口
+  const {ctx, app} = this
+  let sql = 'SELECT article.id as id,'+
+      'article.title as title,'+
+      'article.introduce as introduce,'+
+      'article.view_count as view_count,' +
+      "article.addTime as addTime,"+
+      'type.typeName as typeName '+
+      'FROM article LEFT JOIN type ON article.type_id = type.Id '+
+      'ORDER BY article.id '
+  
+  const resList = await app.mysql.query(sql)
+  ctx.body = {
+      list: resList
+  }
+}
+```
+
+这个接口也需要配置路由守卫，防止通过地址栏进入该页面。
+
+```js
+const getList = async () => {
+  const result = await axios({
+      method: 'get',
+      url: servicePath.getArticleList,
+      withCredentials: true,
+      headers: {'Access-Control-Allow-Origin': '*'}
+  })
+  console.log(result)
+  if(result.data.data === '请重新登录' || result.data.data === '没有登录') {
+      props.history.push('/login')
+  } else {
+      setList(result.data.list)
+  }
+}
+```
+
+## 33-修改了blog部分的代码块的样式
+
+我在github上浏览别人写的博客也是用 hljs.js代码高亮很符合我的胃口也就换了。 下面是样式：
+
+这一部分的CSS内容是 hljs.js 的，我引入到 common.css公共样式中了
+
+```css
+/* hljs-hans-dark.css hljs.js样式*/
+.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 0.5em;
+    background: rgb(80, 31, 122);
+    background: linear-gradient(166deg, rgba(80, 31, 122, 1) 0%, rgba(40, 32, 179, 1) 80%);
+    color: #e7e4eb;
+  }
+  
+  .hljs-subtr {
+    color: #e7e4eb;
+  }
+  
+  .hljs-doctag,
+  .hljs-meta,
+  .hljs-comment,
+  .hljs-quote {
+    color: #f92aad !important;
+    text-shadow: 0 0 2px #100c0f, 0 0 5px #dc078e33, 0 0 10px #fff6;
+  }
+  
+  .hljs-selector-tag,
+  .hljs-selector-id,
+  .hljs-template-tag,
+  .hljs-regexp,
+  .hljs-attr,
+  .hljs-tag {
+    color: #77F1B1 !important;
+    text-shadow: 0 0 2px #001716, 0 0 3px rgb(144, 241, 191);
+  }
+  
+  .hljs-params,
+  .hljs-selector-class,
+  .hljs-bullet {
+    color: #F19FFF ;
+  }
+  
+  .hljs-keyword,
+  .hljs-section,
+  .hljs-meta-keyword,
+  .hljs-symbol,
+  .hljs-type {
+    color: #77F1B1 !important;
+    text-shadow: 0 0 2px #001716, 0 0 3px rgb(144, 241, 191);
+  }
+  
+  .hljs-addition,
+  .hljs-number,
+  .hljs-link {
+    color: #fdfdfd !important;
+    text-shadow: 0 0 2px #001716, 0 0 3px #03edf9, 0 0 5px #03edf9,
+      0 0 10px #03edf9;
+  }
+  
+  
+  .hljs-string {
+    color: #ebe8ff !important;
+    text-shadow: 0 0 2px #001716, 0 0 3px #686de0, 0 0 5px #686de0,
+    0 0 0px #686de0;
+  }
+  
+  
+  .hljs-attribute,
+  .hljs-addition {
+    color: #E7FF9F;
+  }
+  
+  .hljs-variable,
+  .hljs-template-variable {
+    color: #E447FF;
+  }
+  
+  .hljs-builtin-name,
+  .hljs-built_in,
+  .hljs-formula,
+  .hljs-name,
+  .hljs-title,
+  .hljs-class,
+  .hljs-function {
+    color: #43F8F6 !important;
+    text-shadow: 0 0 2px #393a33, 0 0 2px rgb(197, 245, 245);
+  }
+  
+  .hljs-selector-pseudo,
+  .hljs-deletion,
+  .hljs-literal {
+    color: #FF9E44;
+  
+  }
+  
+  .hljs-emphasis,
+  .hljs-quote {
+    font-style: italic;
+  }
+  
+  .hljs-params,
+  .hljs-selector-class,
+  .hljs-strong,
+  .hljs-selector-tag,
+  .hljs-selector-id,
+  .hljs-template-tag,
+  .hljs-section,
+  .hljs-keyword {
+    font-weight: bold;
+  }
+```
+
+这一部分是在上面的CSS样式基础上添加的，我放了 detailed.css文件里，但是这里有点奇怪我也没有想出是什么原因但是没有什么大碍。就是我给 detailed.js 页面设计的样式也可以作用到 index.js和list.js 其他页面上的代码块。这样还省事了。
+
+```css
+.bread-div{
+    padding: .5rem;
+    border-bottom:1px solid #eee;
+    background-color: #e1f0ff;
+}
+.detailed-title{
+    font-size: 1.8rem;
+    text-align: center;
+    padding: 1rem;
+}
+.center{
+    text-align: center;
+}
+.detailed-content{
+    padding: 1.3rem;
+    font-size: 1rem;
+}
+pre{
+    display: block;
+    background-color:#353b48 !important;
+    padding: 0 !important;
+    overflow-y: auto;
+    font-weight: 300;
+    font-family: Menlo, monospace;
+    border-radius: .3rem;
+    padding-top: 1.5rem !important;
+    box-shadow: 0 0 20px 5px rgba(0,0,0,.4);
+}
+pre:before {
+    content: " ";
+    position: absolute;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    background: #fc625d;
+    width: 11px;
+    height: 11px;
+    transform: translate(.5rem,-1rem);
+    -webkit-box-shadow: 20px 0 #fdbc40, 40px 0 #35cd4b;
+    box-shadow: 20px 0 #fdbc40, 40px 0 #35cd4b;
+    z-index: 2;
+}
+pre >code{
+    padding:5px 15px;
+    border:0px !important;
+    background-color: #b9b9b911 !important;
+    color: #fdfdfd;
+    text-shadow: 0 0 2px #001716, 0 0 3px #03edf9, 0 0 5px #03edf9,
+      0 0 10px #03edf9;
+    width: 100%;
+}
+code {
+    display: inline-block ;
+    background-color:#f3f3f3;
+    border:1px solid #fdb9cc;
+    border-radius:3px;
+    font-size: 16px;
+    padding-left: 5px;
+    padding-right: 5px;
+    color:#7a7a7a;
+}
+
+.title-anchor{
+    color:#888 !important;
+    padding:4px !important;
+    margin: 0rem !important;
+    height: auto !important;
+    line-height: 1.2rem !important;
+    font-size: .7rem !important;
+    border-bottom: 1px dashed #eee;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
+.active{
+    color:rgb(30, 144, 255) !important;
+}
+.nav-title{
+    text-align: center;
+    color: #888;
+    border-bottom: 1px solid rgb(30, 144, 255);
+
+}
+.article-menu{
+    font-size:12px;
+}
+iframe{
+    height: 34rem;
+}
+.detailed-content  img{
+    width: 100%;
+    border:1px solid #f3f3f3;
+}
+.title-level3{
+    display: none !important;
+}
+.ant-anchor-link-title{
+    font-size: 12px !important;
+}
+.ant-anchor-wrapper{
+    padding: 5px !important;
+}
+```

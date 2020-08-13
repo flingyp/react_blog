@@ -23,8 +23,6 @@ code {
     padding-left: 5px;
     padding-right: 5px;
     color:#4f4f4f;
-    margin: 0px 3px;
-
 }
 
 .list-context img {
@@ -34,5 +32,4 @@ code {
    max-width:1000px !important;
    display: block;
    margin:8px  auto ;
-
 }

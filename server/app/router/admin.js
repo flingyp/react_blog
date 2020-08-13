@@ -11,4 +11,5 @@ module.exports = app => {
   router.get('/admin/getTypeInfo', adminauth,controller.admin.main.getTypeInfo);
   router.post('/admin/addArticle', controller.admin.main.addArticle);
   router.post('/admin/updateArticle', controller.admin.main.updateArticle);
+  router.get('/admin/getArticleList', adminauth ,controller.admin.main.getArticleList);
 };

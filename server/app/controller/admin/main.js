@@ -20,7 +20,7 @@ class MainController extends Controller {
             const token = jwt.sign(
                 {username: result.username, id: result.Id},
                 'secret',
-                {expiresIn: '1h'}
+                {expiresIn: '1days'}
             )
             console.log(token)
             ctx.session.openId = token
@@ -62,6 +62,23 @@ class MainController extends Controller {
         const updateSuccess = result.affectedRows === 1  // 如果affectedRows 等于1就代表更新成功  返回 true
         ctx.body = {
             isSuccess: updateSuccess
+        }
+    }
+
+    async getArticleList() { // 获取文章列表接口
+        const {ctx, app} = this
+        let sql = 'SELECT article.id as id,'+
+                'article.title as title,'+
+                'article.introduce as introduce,'+
+                'article.view_count as view_count,' +
+                "article.addTime as addTime,"+
+                'type.typeName as typeName '+
+                'FROM article LEFT JOIN type ON article.type_id = type.Id '+
+                'ORDER BY article.id '
+        
+        const resList = await app.mysql.query(sql)
+        ctx.body = {
+            list: resList
         }
     }
 }
