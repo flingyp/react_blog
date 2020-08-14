@@ -22,8 +22,11 @@ class MainController extends Controller {
                 'secret',
                 {expiresIn: '1days'}
             )
-            console.log(token)
-            ctx.session.openId = token
+            ctx.cookies.set('openId', token, {
+                httpOnly: false,
+                signed: false,
+                maxAge: 1000 * 3600 * 2,  // cookie有效期为两个小时
+            });
             ctx.body = {
                 message: '登录成功',
                 openId: token
@@ -79,6 +82,35 @@ class MainController extends Controller {
         const resList = await app.mysql.query(sql)
         ctx.body = {
             list: resList
+        }
+    }
+
+    async delArticle() {  // 删除文章
+        const {ctx, app} = this
+        let id = ctx.params.id
+        const res = await app.mysql.delete('article', {'id': id})
+        ctx.body = {
+            message: '删除成功',
+            data: res
+        } 
+    }
+
+    async getArticleById() { // 根据文章ID获取文章详情
+        const {ctx, app} = this
+        let id = ctx.params.id
+        let sql = 'SELECT article.id as id,'+
+            'article.title as title,'+
+            'article.introduce as introduce,'+
+            'article.article_content as article_content,'+
+            "article.addTime as addTime,"+
+            'article.view_count as view_count ,'+
+            'type.typeName as typeName ,'+
+            'type.id as typeId '+
+            'FROM article LEFT JOIN type ON article.type_id = type.Id '+
+            'WHERE article.id='+id
+        const result = await app.mysql.query(sql)
+        ctx.body = {
+            data: result
         }
     }
 }

@@ -1708,3 +1708,182 @@ iframe{
     padding: 5px !important;
 }
 ```
+
+## 34-删除文章
+
+点击删除按钮就需要删除这篇文章。
+
+
+删除文章接口
+```js
+async delArticle() {  // 删除文章
+  const {ctx, app} = this
+  let id = ctx.params.id
+  const res = await app.mysql.delete('article', {'id': id})
+  ctx.body = {
+      message: '删除成功',
+      data: res
+  } 
+}
+```
+
+后台管理系统删除文章方法
+
+```js
+const delArticle = async (id) => {  // 删除文章
+  confirm({
+      title: '确定要删除这篇文章吗?',
+      content: '如果点击OK，文章会被永远删除，无法恢复',
+      onOk() {
+          axios({
+              method: 'get',
+              url: servicePath.delArticle + '/' + id, 
+              withCredentials: true
+          }).then((result) => {
+              console.log(result)
+              if(result.data.message == '删除成功') {
+                  message.success('文章删除成功')
+                  getList()
+              }
+          })
+      },
+      onCancel() {
+          message.success('没有任何改变')
+      }
+  })
+} 
+```
+
+## 35-修改文章
+
+修改文章先要获取这篇文章的详细内容后再去修改。
+
+获取文章详情内容接口：
+
+```js
+async getArticleById() { // 根据文章ID获取文章详情
+  const {ctx, app} = this
+  let id = ctx.params.id
+  let sql = 'SELECT article.id as id,'+
+      'article.title as title,'+
+      'article.introduce as introduce,'+
+      'article.article_content as article_content,'+
+      "article.addTime as addTime,"+
+      'article.view_count as view_count ,'+
+      'type.typeName as typeName ,'+
+      'type.id as typeId '+
+      'FROM article LEFT JOIN type ON article.type_id = type.Id '+
+      'WHERE article.id='+id
+  const result = await app.mysql.query(sql)
+  ctx.body = {
+      data: result
+  }
+}
+```
+
+点击修改按钮 跳转到添加文章页面
+
+```js
+const updateArticle = async (id) => {  // 根据文章ID获取详情， 跳转到添加文章页面
+  props.history.push('/index/add/' + id)
+}
+```
+
+根据文章的ID获取详情内容，并且给这量赋上值，在 useEffect上调用。注意一定要给 articleId赋为文章自己的ID值。 因为默认是 0 代表新文章，而这是修改文章。 
+
+```js
+const getArticleById = async (id) => {   // 根据文章ID获取文章详情
+  const result = await axios({
+      method: 'get',
+      url: servicePath.getArticleById + '/' + id,
+      withCredentials: true,
+      headers: { 'Access-Control-Allow-Origin':'*' }
+  })
+  const data = result.data.data[0]
+  setArticleTitle(data.title)
+  setSelectType(data.typeName)
+  setArticleContent(data.article_content)
+  let content_html = marked(data.article_content)
+  setMarkdownContent(content_html)
+  setIntroducemd(data.introduce)
+  let introduce_html = marked(data.introduce)
+  setIntroducehtml(introduce_html)
+  setShowDate(data.addTime)
+}
+
+useEffect(() => {
+  getTypeInfo()
+
+  // 获取文章ID 修改文章
+  let artId = props.match.params.id
+  if(artId) {
+    setArticleId(artId)
+    getArticleById(artId)
+  }
+}, [])
+```
+
+## 36-填29、30出现的坑
+
+在29那里我提起到获取 ctx.session.openId的值时是 underfind。然后我在30通过请求头携带的Cookie字符串来获取openId也是会出现比较大的bug。然后我意外在CSDN看到了一篇egg笔记这里就解决了我获取不到 session/cookie值的问题了。[文章地址](https://blog.csdn.net/huanglaoxie1986/article/details/86650752)
+
+之后我重新改写了路由守卫 adminauth.js 具体代码如下：
+
+```js
+const jwt = require('jsonwebtoken')
+module.exports = options => {
+  return async function adminauth(ctx, next) {
+    const openId = ctx.cookies.get('openId', { httpOnly: false, signed: false });
+    // console.log(openId)
+    try {
+        let decoded = jwt.verify(openId, 'secret');
+        if(decoded.username === 'yyblog') {
+            console.log(decoded.username)
+            await next()
+        } else {
+            ctx.body = { // 这里代表 token 过期
+                data: '请重新登录'
+            }
+        }
+    } catch (error) {
+        ctx.body = {
+            data: '请重新登录'
+        }
+    }
+  }
+}
+```
+
+登录接口 派发token 代码如下:
+
+```js
+async login() { // 登录接口
+  const {ctx} = this;
+  let { username, password } = ctx.request.body;
+  const result = await this.app.mysql.get('blogsystem_user', {username: username, password: password})
+  if(result !== null) {
+      // 用户验证成功，进行 session缓存
+      // let openId = new Date().getTime()
+      // 生成token
+      const token = jwt.sign(
+        {username: result.username, id: result.Id},
+        'secret',
+        {expiresIn: '1days'}
+      )
+      ctx.cookies.set('openId', token, {
+        httpOnly: false,
+        signed: false,
+      });
+      ctx.body = {
+        message: '登录成功',
+        openId: token
+      }
+  }else {
+      ctx.body = {
+        message: '登录失败'
+      }
+  }
+}
+```
+
+然后进行测试，删除后台管理系统 Cookie是openId的，刷新页面，页面会重新跳转回登录页面。 修改openId也会跳转回去。

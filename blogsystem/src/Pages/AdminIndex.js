@@ -19,7 +19,7 @@ function AdminIndex(props) {
   };
 
   const handleClickArticle = e => {
-    if(e.key === '3') {
+    if(e.key === '2') {
       props.history.push('/index/add')
     }else {
       props.history.push('/index/list')
@@ -34,24 +34,15 @@ function AdminIndex(props) {
           <Menu.Item key="1" icon={<PieChartOutlined />}>
             工作台
           </Menu.Item>
-          <Menu.Item 
-            key="2" 
-            icon={<DesktopOutlined />}
-          >
-            添加文章
-          </Menu.Item>
           <SubMenu 
             key="sub1" 
             icon={<UserOutlined />} 
             title="文章管理"
             onClick={handleClickArticle}
           >
-            <Menu.Item key="3">添加文章</Menu.Item>
-            <Menu.Item key="4">文章列表</Menu.Item>
+            <Menu.Item key="2">添加文章</Menu.Item>
+            <Menu.Item key="3">文章列表</Menu.Item>
           </SubMenu>
-          <Menu.Item key="5" icon={<TeamOutlined />}>
-            留言管理
-          </Menu.Item>
         </Menu>
       </Sider>
       <Layout className="site-layout">
@@ -65,6 +56,7 @@ function AdminIndex(props) {
               <Route path="/index" exact component={AddArticle}></Route>
               <Route path="/index/add" exact component={AddArticle}></Route>
               <Route path="/index/list" exact component={ArticleList}></Route>
+              <Route path="/index/add/:id" exact component={AddArticle}></Route>
             </div>
           </div>
         </Content>

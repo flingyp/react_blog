@@ -28,6 +28,7 @@ function Login(props) {
                 username: userName,
                 password: password
             })
+            console.log(result)
             if(result.data.message === '登录成功') {
                 document.cookie = `openId=${result.data.openId}`
                 props.history.push('/index')

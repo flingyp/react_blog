@@ -1,28 +1,25 @@
 const jwt = require('jsonwebtoken')
 module.exports = options => {
     return async function adminauth(ctx, next) {
-        let str = ctx.request.header.cookie
-        let openIdName = str.indexOf('openId')
-        if(openIdName!= '-1') {
-            let openId = str.split(';')[2].split('=')[1]
-            try {
-                let decoded = jwt.verify(openId, 'secret');
-                if(decoded.username === 'yyblog') {
-                    console.log(decoded.username)
-                    await next()
-                } else {
-                    ctx.body = { // 这里代表 token 过期
-                        data: '没有登录'
-                    }
-                }
-            } catch (error) {
-                ctx.body = {
+        const openId = ctx.cookies.get('openId', { 
+            httpOnly: false, 
+            signed: false ,
+            maxAge: 1000 * 3600 * 2,  // cookie有效期为两个小时
+        });
+        console.log(openId)
+        try {
+            let decoded = jwt.verify(openId, 'secret');
+            if(decoded.username === 'yyblog') {
+                console.log(decoded.username)
+                await next()
+            } else {
+                ctx.body = { // 这里代表 token 过期
                     data: '请重新登录'
                 }
             }
-        }else {
+        } catch (error) {
             ctx.body = {
-                data: '没有登录'
+                data: '请重新登录'
             }
         }
     }

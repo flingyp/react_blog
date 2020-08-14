@@ -58,7 +58,7 @@ function AddArticle(props) {
             header:{ 'Access-Control-Allow-Origin':'*' },
             withCredentials: true
         })
-        if(result.data.data === '没有登录' || result.data.data === '请重新登录') {
+        if(result.data.data === '请重新登录') {
             props.history.push('/login')
         } else {
             setTypeInfo(result.data.data)
@@ -123,8 +123,34 @@ function AddArticle(props) {
         }
     }
 
+    const getArticleById = async (id) => {   // 根据文章ID获取文章详情
+        const result = await axios({
+            method: 'get',
+            url: servicePath.getArticleById + '/' + id,
+            withCredentials: true,
+            headers: { 'Access-Control-Allow-Origin':'*' }
+        })
+        const data = result.data.data[0]
+        setArticleTitle(data.title)
+        setSelectType(data.typeName)
+        setArticleContent(data.article_content)
+        let content_html = marked(data.article_content)
+        setMarkdownContent(content_html)
+        setIntroducemd(data.introduce)
+        let introduce_html = marked(data.introduce)
+        setIntroducehtml(introduce_html)
+        setShowDate(data.addTime)
+    }
+
     useEffect(() => {
         getTypeInfo()
+
+        // 获取文章ID 修改文章
+        let artId = props.match.params.id
+        if(artId) {
+            setArticleId(artId)
+            getArticleById(artId)
+        }
     }, [])
 
     return (
@@ -174,7 +200,6 @@ function AddArticle(props) {
                 <Col span={6}>
                     <Row>
                         <Col span={24}>
-                            <Button className="zhancun-article" size="large">暂存文章</Button>
                             <Button className="fabu-article" type="primary" size="large" onClick={saveArticle}>发布文章</Button>
                             <div className="date-select">
                                 <DatePicker
