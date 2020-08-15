@@ -6,7 +6,6 @@ import { FieldTimeOutlined, CalendarOutlined, FireOutlined } from '@ant-design/i
 import marked from 'marked'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/monokai-sublime.css';
-// import 'markdown-navbar/dist/navbar.css';
 import axios from 'axios'
 import Header from '../components/Header'
 import Author from '../components/Author'
@@ -18,6 +17,11 @@ import servicePath from '../config/apiUrl' // 数据接口地址
 
 
 const BlogList = (props) => {
+  console.log(props.data.data[0])
+  const title = props.data.data[0].title
+  const addTime = props.data.data[0].addTime
+  const typeName = props.data.data[0].typeName
+  const view_count = props.data.data[0].view_count
   const stringData = props.data.data[0].article_content 
 
   const renderer = new marked.Renderer()
@@ -61,20 +65,20 @@ const BlogList = (props) => {
             <div className="bread-div">
                 <Breadcrumb>
                     <Breadcrumb.Item><a href="/">首页</a></Breadcrumb.Item>
-                    <Breadcrumb.Item><a href="/list">博客列表</a></Breadcrumb.Item>
-                    <Breadcrumb.Item>XXXX</Breadcrumb.Item>
+                    <Breadcrumb.Item><a href="/list">文章</a></Breadcrumb.Item>
+                    <Breadcrumb.Item>{title}</Breadcrumb.Item>
                 </Breadcrumb>
             </div>
 
             <div>
                 <div className="detailed-title">
-                  React个人博客实现开发-编写详情页面
+                  {title}
                 </div>
 
                 <div className="list-icon center">
-                    <span><FieldTimeOutlined />2019-06-28</span>
-                    <span><CalendarOutlined />视频教程</span>
-                    <span><FireOutlined />5498人</span>
+                    <span><FieldTimeOutlined />{addTime}</span>
+                    <span><CalendarOutlined />{typeName}</span>
+                    <span><FireOutlined />{view_count}人</span>
                 </div>
 
                 <div 

@@ -5,7 +5,7 @@ import AdminIndex from './AdminIndex'
 
 function Main() {
     return (
-        <div className="main">
+        <div className="main" style={{height: '100%'}}>
             <Router>
                 <Route path="/login" exact component={Login}></Route>
                 <Route path="/index" component={AdminIndex}></Route>

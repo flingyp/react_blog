@@ -52,7 +52,7 @@ const blogList = (props) => {
             <div className="bread-div">
                 <Breadcrumb>
                     <Breadcrumb.Item><a href="/">首页</a></Breadcrumb.Item>
-                    <Breadcrumb.Item>博客列表</Breadcrumb.Item>
+                    <Breadcrumb.Item>文章</Breadcrumb.Item>
                 </Breadcrumb>
             </div>
 
@@ -94,9 +94,16 @@ const blogList = (props) => {
 
 blogList.getInitialProps = async({query})  => {
   let id = query.id
-  const listArticleData = await axios(servicePath.getListById + '/' + id)
-  return {
-    data: listArticleData.data
+  if(id === '1') {
+    const listArticleData = await axios(servicePath.getListById + '/' + id)
+    return {
+      data: listArticleData.data
+    }
+  } else {
+    const listArticleData = []
+    return {
+      data: listArticleData
+    }
   }
 }
 
