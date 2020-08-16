@@ -1,4 +1,6 @@
-# ![plane](https://github.com/flingyp/react_blog/react_blog/raw/master/imgs/飞机.svg) 个人博库项目搭建过程
+#  个人博库项目搭建过程
+
+![img](https://github.com/flingyp/react_blog/react_blog/raw/master/imgs/个人博客项目整体结构.png)
 
 ## 00-开发过程遇到的问题
 
