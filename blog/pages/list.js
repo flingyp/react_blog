@@ -1,5 +1,6 @@
 // 博客列表页面
 import React, {useState, useEffect} from 'react'
+import Router from 'next/router'
 import axios from 'axios'
 import Link from 'next/link'
 import Head from 'next/head'
@@ -37,7 +38,17 @@ const blogList = (props) => {
   const [ mylist , setMylist ] = useState(props.data.data)
   useEffect(()=> {
     setMylist(props.data.data)
-  }, [])
+  })
+
+  const switchItem = () => {
+    const id = props.url.query.id
+    if(id === '1') {
+      return '技术文档'
+    } else if(id === '2') {
+      return '学习笔记'
+    }
+  }
+
   return (
     <>
       <Head>
@@ -45,6 +56,7 @@ const blogList = (props) => {
       </Head>
       {/* 头部组件 */}
       <Header /> 
+      <div className="list_img"></div>
       {/* 中间部分 */}
       <Row className="common-main" type="flex" justify="center">
         <Col className="common-left" xs={24} sm={24} md={16} lg={18} xl={14}>
@@ -52,13 +64,13 @@ const blogList = (props) => {
             <div className="bread-div">
                 <Breadcrumb>
                     <Breadcrumb.Item><a href="/">首页</a></Breadcrumb.Item>
-                    <Breadcrumb.Item>文章</Breadcrumb.Item>
+                    <Breadcrumb.Item>{switchItem()}</Breadcrumb.Item>
                 </Breadcrumb>
             </div>
 
 
             <List
-              header={<div>最新日志</div>}
+              // header={<div>最新日志</div>}
               itemLayout="vertical" 
               dataSource={mylist}
               renderItem={ item => (
@@ -94,17 +106,11 @@ const blogList = (props) => {
 
 blogList.getInitialProps = async({query})  => {
   let id = query.id
-  if(id === '1') {
-    const listArticleData = await axios(servicePath.getListById + '/' + id)
-    return {
-      data: listArticleData.data
-    }
-  } else {
-    const listArticleData = []
-    return {
-      data: listArticleData
-    }
+  const listArticleData = await axios(servicePath.getListById + '/' + id)
+  return {
+    data: listArticleData.data
   }
 }
+
 
 export default blogList

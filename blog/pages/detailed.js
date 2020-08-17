@@ -58,6 +58,7 @@ const BlogList = (props) => {
       </Head>
       {/* 头部组件 */}
       <Header /> 
+      <div className="detailed_img"></div>
       {/* 中间部分 */}
       <Row className="common-main" type="flex" justify="center">
         <Col className="common-left" xs={24} sm={24} md={16} lg={18} xl={14}>

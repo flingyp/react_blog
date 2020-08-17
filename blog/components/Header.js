@@ -29,7 +29,7 @@ const Header = () => {
         if(e.key == 1) { // 跳转到列表页 (文章)
             Router.push('/list?id=1')
         } else if(e.key == 2)  {   // 跳转到生活页面 (生活)
-            Router.push('/life?id=2')
+            Router.push('/list?id=2')
         } else if(e.key === 'home') { // 跳转到首页
             Router.push('/index')
         }

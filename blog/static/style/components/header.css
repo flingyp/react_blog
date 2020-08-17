@@ -1,20 +1,27 @@
+@font-face {
+    font-family: "華康古籍糸柳W3";
+    src: url("/static/font/華康古籍糸柳W3.ttf");
+}
 .header {
+    font-family: 華康古籍糸柳W3;
     background-color:#fff;
     padding: .4rem;
     overflow: hidden;
-    height: 2.8rem;
+    height: 4rem;
     border-bottom:1px solid #ccc;
+    font-weight: 700;
 }
-
-
 
 .header-logo {
     color: #0984e3;
-    font-size: 1.4rem;
+    font-size: 2.1rem;
+    font-weight: 600;
 }
+
 
 .header-txt{
     display: inline-block;
-    margin-left: .1875rem;
-    font-size: .5rem;
+    margin-left: .5rem;
+    font-size: 1rem;
+    font-weight: 500;
 }

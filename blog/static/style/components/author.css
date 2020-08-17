@@ -1,6 +1,7 @@
 .author-div{
     padding: 1rem;
     text-align: center;
+    background: rgba(189, 195, 199,.1);
 }
 
 .author-div div {
@@ -8,9 +9,10 @@
 }
 
 .author-introduction{
-    font-size: .8rem;
-    color: #999;
+    font-size: .9rem;
+    color: rgba(52, 73, 94,1.0);
 }
+
 
 .account{
     background-color: #999;
