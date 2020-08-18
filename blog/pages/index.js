@@ -1,6 +1,7 @@
 // 博客首页页面
 import '../static/style/page/index.css'  // 首页样式
-import React, {useState} from 'react'
+import blogBackground from '../config/blogBackground'
+import React, {useState, useEffect} from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
 import { Row, Col, List } from 'antd';
@@ -16,6 +17,7 @@ import hljs from 'highlight.js'
 import 'highlight.js/styles/monokai-sublime.css'
 
 import servicePath from '../config/apiUrl' // 数据接口地址
+
 
 
 const Home = (props) => {
@@ -38,6 +40,10 @@ const Home = (props) => {
 
 
   const [ mylist , setMylist ] = useState(props.data.data)
+
+  useEffect(() => {
+    blogBackground()
+  }, [])
   return (
     <>
       <Head>

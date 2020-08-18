@@ -1,6 +1,15 @@
+@font-face {
+    font-family: 華康古籍糸柳W3;
+    src: url(/static/font/華康古籍糸柳W3.ttf)
+}
+
 .footer-div{
+    font-family: 華康古籍糸柳W3;
     text-align: center;
-    font-size: .7.5rem;
-    color: #999;
-    margin: 1rem;
+    font-size: 1.125rem;
+    letter-spacing: 4px;
+    color: #fff;
+    margin: 1rem 0 0 0;
+    padding: 1rem;
+    background: rgba(0, 100, 100, .5);
 }

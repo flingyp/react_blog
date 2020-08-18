@@ -13,7 +13,7 @@
 }
 
 .header-logo {
-    color: #0984e3;
+    color: rgba(150, 50, 50, .5);
     font-size: 2.1rem;
     font-weight: 600;
 }
