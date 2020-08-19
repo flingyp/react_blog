@@ -52,7 +52,7 @@ const blogList = (props) => {
   return (
     <>
       <Head>
-        <title>List</title>
+        <title>文章列表 | XiaoPeng记录每一天的点点滴滴</title>
       </Head>
       {/* 头部组件 */}
       <Header /> 

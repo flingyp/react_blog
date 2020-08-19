@@ -1,6 +1,5 @@
 // 博客首页页面
 import '../static/style/page/index.css'  // 首页样式
-import blogBackground from '../config/blogBackground'
 import React, {useState, useEffect} from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
@@ -40,14 +39,11 @@ const Home = (props) => {
 
 
   const [ mylist , setMylist ] = useState(props.data.data)
-
-  useEffect(() => {
-    blogBackground()
-  }, [])
   return (
     <>
       <Head>
-        <title>Home</title>
+        <link rel="icon" href="/static/imgs/logo.ico" type="logo-ico" />
+        <title>首页 | XiaoPeng记录每一天的点点滴滴</title>
       </Head>
       {/* 头部组件 */}
       <Header /> 

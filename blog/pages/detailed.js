@@ -54,7 +54,7 @@ const BlogList = (props) => {
   return (
     <>
       <Head>
-        <title>博客详细页面</title>
+        <title>详情 | XiaoPeng记录每一天的点点滴滴</title>
       </Head>
       {/* 头部组件 */}
       <Header /> 
@@ -66,7 +66,7 @@ const BlogList = (props) => {
             <div className="bread-div">
                 <Breadcrumb>
                     <Breadcrumb.Item><a href="/">首页</a></Breadcrumb.Item>
-                    <Breadcrumb.Item><a href="/list">文章</a></Breadcrumb.Item>
+                    <Breadcrumb.Item><a href={typeName==='技术文档'?'/list?id=1': '/list?id=2'}>{typeName==='技术文档'? '技术文档' : '学习笔记'}</a></Breadcrumb.Item>
                     <Breadcrumb.Item>{title}</Breadcrumb.Item>
                 </Breadcrumb>
             </div>
