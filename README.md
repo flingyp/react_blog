@@ -1889,3 +1889,72 @@ async login() { // 登录接口
 ```
 
 然后进行测试，删除后台管理系统 Cookie是openId的，刷新页面，页面会重新跳转回登录页面。 修改openId也会跳转回去。
+
+## 首页添加 加载文章更多功能
+
+先对后端的获取文章接口进行修改：
+
+```js
+async getArticleList() { //获取首页文章接口
+  const { ctx } = this;
+  let page = ctx.query.page    // 首页页数
+  let limit = ctx.query.limit  // 文字条数
+  let sql = `
+    SELECT 
+      article.id as id,
+      article.title as title,
+      article.introduce as introduce,
+      article.addTime as addTime,
+      article.view_count as view_count,
+      type.typeName as typeName
+      FROM article LEFT JOIN type ON article.type_id = type.Id
+      LIMIT ${(page - 1)*limit}, ${limit}
+  `
+  const result = await this.app.mysql.query(sql)
+  ctx.body = {
+    data: result
+  }
+}
+```
+
+再对前端页面的index.js添加相应的方法：
+
+```js
+
+// 对应所用到的变量值：
+const [mylist , setMylist ] = useState(props.data.data)
+const [falgLoading, setFlagLoading] = useState(false)  // 控制 Loading 开关
+const [page , setPage] = useState(1)                   // 当前页数
+const [limit, setLimit] = useState(5)                  // 文章数量
+
+// 加载更多
+const loadingMore = async () => {
+  let nextPage = page + 1
+  setPage(nextPage)
+  if(!falgLoading) {
+    setFlagLoading(true)
+    // 请求更多
+    const nextArticleList = await axios({
+      method: 'get',
+      params: {  
+        page: nextPage,   // 当前页数
+        limit: limit  // 显示文章条数
+      },
+      url: servicePath.getArticleList, 
+      header:{ 'Access-Control-Allow-Origin':'*' },
+      withCredentials: true
+    })
+    if(nextArticleList.data.data.length!=0) { 
+      const newArticleList = [...mylist, ...nextArticleList.data.data]
+      setMylist(newArticleList)
+      setFlagLoading(false)
+    } else { // 数据加载完毕 没有过多的数据
+      setFlagLoading(false)
+      message.info('地主家也没有过多的余粮了')
+    }
+  } else {
+    setFlagLoading(false)
+  }
+}
+```
+

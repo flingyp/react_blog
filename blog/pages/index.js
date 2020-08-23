@@ -3,7 +3,7 @@ import '../static/style/page/index.css'  // 首页样式
 import React, {useState, useEffect} from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
-import { Row, Col, List, Button } from 'antd';
+import { Row, Col, List, Button, Spin, message } from 'antd';
 import { FieldTimeOutlined, CalendarOutlined, FireOutlined } from '@ant-design/icons';
 import axios from 'axios'
 import Header from '../components/Header'
@@ -11,7 +11,7 @@ import Author from '../components/Author'
 import Advert from '../components/Advert'
 import Footer from '../components/Footer'
 
-import marked from 'marked'
+import marked, { use } from 'marked'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/monokai-sublime.css'
 
@@ -21,8 +21,8 @@ import addViewsById from '../config/addViewsById'  // 增加文章浏览量函�
 
 
 
+
 const Home = (props) => {
-  console.log(props.data)
   const renderer = new marked.Renderer()
   marked.setOptions({
     renderer: renderer,
@@ -42,6 +42,40 @@ const Home = (props) => {
 
 
   const [ mylist , setMylist ] = useState(props.data.data)
+  const [falgLoading, setFlagLoading] = useState(false) 
+  const [page , setPage] = useState(1)
+  const [limit, setLimit] = useState(5)
+
+  // 加载更多
+  const loadingMore = async () => {
+    let nextPage = page + 1
+    setPage(nextPage)
+    if(!falgLoading) {
+      setFlagLoading(true)
+      // 请求更多
+      const nextArticleList = await axios({
+        method: 'get',
+        params: {  
+          page: nextPage,   // 当前页数
+          limit: limit  // 显示文章条数
+        },
+        url: servicePath.getArticleList, 
+        header:{ 'Access-Control-Allow-Origin':'*' },
+        withCredentials: true
+      })
+      if(nextArticleList.data.data.length!=0) { 
+        const newArticleList = [...mylist, ...nextArticleList.data.data]
+        setMylist(newArticleList)
+        setFlagLoading(false)
+      } else { // 数据加载完毕 没有过多的数据
+        setFlagLoading(false)
+        message.info('地主家也没有过多的余粮了')
+      }
+    } else {
+      setFlagLoading(false)
+    }
+  }
+
   return (
     <>
       <Head>
@@ -78,8 +112,13 @@ const Home = (props) => {
               )}
             />
           </div>
-          <div className="loadMore" onClick={() => {console.log('点击了')}}>
-            <Button type="dashed" size="middle">加载更多</Button>
+          <div className="loadMore" onClick={() => {loadingMore()}}>
+            {
+              falgLoading ? 
+                <Spin tip="加载更多..." spinning={falgLoading}></Spin> 
+              :
+                <Button type="dashed" size="middle">加载更多</Button>
+            }
           </div>
         </Col>
         <Col className="common-box" xs={0} sm={0} md={7} lg={5} xl={4}>
