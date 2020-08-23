@@ -16,6 +16,8 @@ import marked from 'marked'
 import hljs from "highlight.js";
 import 'highlight.js/styles/monokai-sublime.css';
 
+import addViewsById from '../config/addViewsById'  // 增加文章浏览量函数
+
 
 
 const blogList = (props) => {
@@ -75,7 +77,7 @@ const blogList = (props) => {
               dataSource={mylist}
               renderItem={ item => (
                 <List.Item>
-                  <div className="list-title">
+                  <div className="list-title" onClick={() => {addViewsById(item.id, item.view_count)}}>
                     <Link prefetch href={{ pathname: '/detailed', query: {id: item.id}}}>
                       <a>{item.title}</a> 
                     </Link>

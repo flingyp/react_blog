@@ -52,3 +52,8 @@ code {
     background-color: black;
     opacity: .2;
 }
+
+.loadMore{
+    padding: 10px 0;
+    text-align: center;
+}

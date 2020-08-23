@@ -3,7 +3,7 @@ import '../static/style/page/index.css'  // 首页样式
 import React, {useState, useEffect} from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
-import { Row, Col, List } from 'antd';
+import { Row, Col, List, Button } from 'antd';
 import { FieldTimeOutlined, CalendarOutlined, FireOutlined } from '@ant-design/icons';
 import axios from 'axios'
 import Header from '../components/Header'
@@ -17,9 +17,12 @@ import 'highlight.js/styles/monokai-sublime.css'
 
 import servicePath from '../config/apiUrl' // 数据接口地址
 
+import addViewsById from '../config/addViewsById'  // 增加文章浏览量函数
+
 
 
 const Home = (props) => {
+  console.log(props.data)
   const renderer = new marked.Renderer()
   marked.setOptions({
     renderer: renderer,
@@ -58,7 +61,7 @@ const Home = (props) => {
               dataSource={mylist}
               renderItem={ item => (
                 <List.Item>
-                  <div className="list-title">
+                  <div className="list-title" onClick={() => {addViewsById(item.id, item.view_count)}}>
                     <Link prefetch href={{ pathname: '/detailed', query: {id: item.id}}}>
                       <a>{item.title}</a> 
                     </Link>
@@ -75,6 +78,9 @@ const Home = (props) => {
               )}
             />
           </div>
+          <div className="loadMore" onClick={() => {console.log('点击了')}}>
+            <Button type="dashed" size="middle">加载更多</Button>
+          </div>
         </Col>
         <Col className="common-box" xs={0} sm={0} md={7} lg={5} xl={4}>
           <Author />
@@ -90,6 +96,10 @@ const Home = (props) => {
 Home.getInitialProps = async()  => {
   const indexArticleData = await axios({
     method: 'get',
+    params: {  
+      page: 1,   // 当前页数
+      limit: 5  // 显示文章条数
+    },
     url: servicePath.getArticleList, 
     header:{ 'Access-Control-Allow-Origin':'*' },
     withCredentials: true
