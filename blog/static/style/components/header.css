@@ -2,26 +2,32 @@
     font-family: "華康古籍糸柳W3";
     src: url("/static/font/華康古籍糸柳W3.ttf");
 }
+
+@font-face {
+    font-family: "王汉宗粗楷体简";
+    src: url("/static/font/王汉宗粗楷体简");
+}
+
 .header {
-    font-family: 華康古籍糸柳W3;
+    font-family: 王汉宗粗楷体简;
     background-color:#fff;
-    padding: .4rem;
+    padding: .2rem;
     overflow: hidden;
-    height: 4rem;
+    height: 3.4rem;
     border-bottom:1px solid #ccc;
     font-weight: 700;
 }
 
 .header-logo {
     color: rgba(150, 50, 50, .5);
-    font-size: 2.1rem;
+    font-size: 1.5rem;
     font-weight: 600;
 }
 
 
 .header-txt{
     display: inline-block;
-    margin-left: .5rem;
-    font-size: 1rem;
+    margin-left: .3rem;
+    font-size: .7rem;
     font-weight: 500;
 }

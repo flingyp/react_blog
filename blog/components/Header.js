@@ -40,7 +40,7 @@ const Header = () => {
             <Row type="flex" justify="center">
                 <Col xs={24} sm={24} md={10} lg={15} xl={13}>
                     <span className="header-logo">XiaoPeng</span>
-                    <span className="header-txt">专注前端开发，专注前端开发哦耶！</span>
+                    <span className="header-txt">专注前端开发，专注前端开发！</span>
                 </Col>
                 <Col xs={0} sm={0} md={14} lg={8} xl={6}>
                     <Menu 

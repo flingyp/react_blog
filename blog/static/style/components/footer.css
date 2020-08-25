@@ -1,12 +1,17 @@
 @font-face {
-    font-family: 華康古籍糸柳W3;
-    src: url(/static/font/華康古籍糸柳W3.ttf)
+    font-family: "華康古籍糸柳W3";
+    src: url("/static/font/華康古籍糸柳W3.ttf");
+}
+
+@font-face {
+    font-family: "王汉宗粗楷体简";
+    src: url("/static/font/王汉宗粗楷体简");
 }
 
 .footer-div{
-    font-family: 華康古籍糸柳W3;
+    font-family: 王汉宗粗楷体简;
     text-align: center;
-    font-size: 1.125rem;
+    font-size: 1rem;
     letter-spacing: 4px;
     color: #fff;
     margin: 1rem 0 0 0;
