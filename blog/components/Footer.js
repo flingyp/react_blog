@@ -1,11 +1,10 @@
-import '../static/style/components/footer.css'
-
+import "../static/style/components/footer.css";
+import { FooterInfoRunning, FooterInfoIntroduce } from "../config/setUserInfo";
 const Footer = () => (
-    <div className="footer-div">
-        <div>系统由 React + Node.js + Ant Design驱动</div>
-        <div>请关注我的博客yyblog.top/vuepress</div>
-    </div>
-)
+  <div className="footer-div">
+    <div>{FooterInfoRunning}</div>
+    <div>{FooterInfoIntroduce}</div>
+  </div>
+);
 
-
-export default Footer
+export default Footer;
