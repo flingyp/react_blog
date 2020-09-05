@@ -33,6 +33,9 @@ const Header = () => {
     } else if (e.key === "home") {
       // 跳转到首页
       Router.push("/index");
+    } else if (e.key == 3) {
+      console.log(e.key);
+      Router.push("/goodarticle");
     }
   };
 
