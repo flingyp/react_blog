@@ -2,6 +2,9 @@
 
 const Controller = require("egg").Controller;
 const jwt = require("jsonwebtoken");
+const moment = require("moment");
+const path = require("path");
+const fs = require("mz/fs");
 
 class MainController extends Controller {
   async test() {
@@ -161,12 +164,44 @@ class MainController extends Controller {
     // 删除优秀文章
     const { ctx, app } = this;
     let id = ctx.query.id;
+    console.log(id);
     const res = await app.mysql.delete("wellarticle", { id: id });
     console.log(res);
     ctx.body = {
       message: "删除成功",
       data: res,
     };
+  }
+
+  async uploadImg() {
+    const { ctx } = this;
+    const file = ctx.request.files[0];
+    const name = 'uploadimg' + path.basename(file.filename);
+    // {
+    //   field: 'avatar',
+    //   filename: '个人照2.png',
+    //   encoding: '7bit',
+    //   mime: 'image/png',
+    //   fieldname: 'avatar',
+    //   transferEncoding: '7bit',
+    //   mimeType: 'image/png',
+    //   filepath: 'C:\\Users\\Administrator\\AppData\\Local\\Temp\\egg-multipart-tmp\\server\\2020\\10\\17\\23\\255471e0-5e04-4837-bb08-d9a35cc0a122.png'
+    // } 
+    //uploadimg/个人照2.png
+    console.log(file, name);
+    // let result
+    // try {
+    //   // 处理文件，比如上传到云端
+    //   result = await ctx.oss.put(name, file.filepath);
+    //   console.log(result)
+      
+    // } finally {
+    //   // 需要删除临时文件
+    //   await fs.unlink(file.filepath);
+    // }
+    ctx.body = {
+      message: "上传成功"
+    }
   }
 }
 

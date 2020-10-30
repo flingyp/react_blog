@@ -11,6 +11,7 @@ let servicePath = {
   addGoodArticle: ipUrl + "addGoodArticle", // 添加优秀文章
   goodArticleList: ipUrl + "goodArticleList", // 获取所有优秀文章
   delGoodArticleById: ipUrl + "delGoodArticleById", //删除 优秀文章
+  uploadImg: ipUrl + "uploadImg"
 };
 
 export default servicePath;

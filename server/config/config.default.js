@@ -15,7 +15,7 @@ module.exports = appInfo => {
   config.mysql = {
     client: {
       host: 'localhost',
-      port: '3306',
+      port: '3307',
       user: 'root',
       password: 'root',
       database: 'myblog',
@@ -54,6 +54,11 @@ module.exports = appInfo => {
   const userConfig = {
     // myAppName: 'egg',
   };
+
+  // 开启 file 模式
+  exports.multipart = {
+    mode: 'file',
+  }
 
   return {
     ...config,

@@ -49,4 +49,11 @@ module.exports = (app) => {
     adminauth,
     controller.admin.main.delGoodArticleById
   );
+
+  // 和博客项目是分开的，用于上传图片保存到服务器上的
+  router.post(
+    "/admin/uploadImg",
+    adminauth,
+    controller.admin.main.uploadImg
+  )
 };

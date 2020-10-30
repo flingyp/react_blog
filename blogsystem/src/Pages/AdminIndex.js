@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Layout, Menu, Breadcrumb } from "antd";
-import { PieChartOutlined, UserOutlined } from "@ant-design/icons";
+import { PieChartOutlined, UserOutlined, FileImageFilled } from "@ant-design/icons";
 import "../static/css/AdminIndex.css";
 import AddArticle from "./AddArticle";
 import ArticleList from "./ArticleList";
 import Weclome from "./Weclome";
 import AddWellArticle from "./AddWellArticle";
 import GoodArticleList from "./GoodArticleList";
+import AddImgs from './AddImgs'
 
 const { Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -40,6 +41,9 @@ function AdminIndex(props) {
     } else if (e.key === "5") {
       props.history.push("/index/goodarticlelist");
       setDefaultSelectedKeys(["5"]);
+    } else if (e.key === "6") {
+      props.history.push("/index/addimgs")
+      setDefaultSelectedKeys(["6"]);
     }
   };
 
@@ -82,6 +86,14 @@ function AdminIndex(props) {
             <Menu.Item key="4">添加优秀文章</Menu.Item>
             <Menu.Item key="5">优秀文章列表</Menu.Item>
           </SubMenu>
+          <Menu.Item
+            key="6"
+            icon={<FileImageFilled />}
+            title="上传图片"
+            onClick={handleClickArticle}
+          >
+            上传图片
+          </Menu.Item>
         </Menu>
       </Sider>
       <Layout className="site-layout">
@@ -110,6 +122,7 @@ function AdminIndex(props) {
                 exact
                 component={GoodArticleList}
               ></Route>
+              <Route path="/index/addimgs" exact component={AddImgs}></Route>
             </div>
           </div>
         </Content>

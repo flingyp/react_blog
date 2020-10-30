@@ -123,14 +123,24 @@ class HomeController extends Controller {
         (page - 1) * limit
       }, ${limit}
     `;
-    const result = await app.mysql.query(sql);
-    const count = result[0].count;
-    ctx.body = {
-      data: {
-        result,
-        count,
-      },
-    };
+    try {
+      const result = await app.mysql.query(sql);
+      const count = result[0].count;
+      ctx.body = {
+        data: {
+          result,
+          count,
+        },
+      };
+    } catch (error) {
+      ctx.body = {
+        data: {
+          result: [],
+          count: 0,
+          message: "暂时没有数据",
+        },
+      };
+    }
   }
 }
 
